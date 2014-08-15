@@ -16,9 +16,9 @@ let s:unite_source.action_table.open = {
 
 function! s:unite_source.action_table.open.func(candidate)
     if has('unix')
-        call system('xdg-open https://gist.github.com/' . split(a:candidate.word, '\t')[0])
+        call system('xdg-open https://gist.github.com/'.split(a:candidate.word, '\t')[0].' &')
     elseif has('mac')
-        call system('open https://gist.github.com/' . split(a:candidate.word, '\t')[0])
+        call system('open https://gist.github.com/'.split(a:candidate.word, '\t')[0].' &')
     endif
 endfunction
 
@@ -34,11 +34,21 @@ function! s:unite_source.action_table.edit.func(candidate)
     endif
     let uri = 'https://gist.githubusercontent.com/'.split(a:candidate.word, '\t')[0].'/raw'
     let fname = g:unite_data_directory.'/gist/'.escape(split(a:candidate.word, '\t')[1], ' \')
-    if glob(g:unite_data_directory.'/gist') == ''
+    if !isdirectory(g:unite_data_directory.'/gist')
         call mkdir(g:unite_data_directory.'/gist')
     endif
+    call unite#print_source_message('Downloading the gist...', 'gist')
     call system('curl '.uri.' -o '.fname)
     execute 'e '.fname
+endfunction
+
+let s:unite_source.action_table.clean = {
+            \ 'description' : 'Edit the gist',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.clean.func(candidate)
+    call system('rm -rf '.g:unite_data_directory.'/gist')
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
@@ -51,7 +61,7 @@ endfunction
 function! s:unite_source.hooks.on_init(args, context)
     let a:context.source__input =
                 \ unite#util#input('Please input search words: ', '')
-    call unite#print_source_message('Fetching gists info from the server ...', s:unite_source.name)
+    call unite#print_source_message('Fetching gists info from the server ...', 'gist')
     let s:candidates = map(
                 \ s:http_get(a:context.source__input),
                 \ '{"word": v:val,
@@ -72,9 +82,6 @@ function! s:http_get(input)
     let gists = filter(lines, 'v:val =~ "css-truncate-target"')
     let entries = map(gists, 's:extract_entry(v:val)')
     return entries
-    " for e in entries
-    "     echom e
-    " endfor
 endfunction
 
 function! s:extract_entry(line)

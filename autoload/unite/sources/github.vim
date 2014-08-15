@@ -15,9 +15,9 @@ let s:unite_source.action_table.open = {
 
 function! s:unite_source.action_table.open.func(candidate)
     if has('unix')
-        call system('xdg-open https://github.com/' . a:candidate.word)
+        call system('xdg-open https://github.com/'.a:candidate.word.' &')
     elseif has('mac')
-        call system('open https://github.com/' . a:candidate.word)
+        call system('open https://github.com/'.a:candidate.word.' &')
     endif
 endfunction
 
