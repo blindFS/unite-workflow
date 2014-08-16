@@ -7,23 +7,10 @@ endfunction
 
 let s:kind = {
             \ 'name' : 'gist',
-            \ 'default_action' : 'open',
-            \ 'action_table': {}
-            \}
-
-let s:kind.action_table.open = {
-            \ 'description' : 'Open link in a browser.',
-            \ 'is_quit' : 0
+            \ 'default_action' : 'edit',
+            \ 'action_table' : {},
+            \ 'parents' : ['uri']
             \ }
-
-function! s:kind.action_table.open.func(candidate)
-    if has('unix')
-        call system('xdg-open '.a:candidate.url.' &')
-    elseif has('mac')
-        call system('open '.a:candidate.url.' &')
-    endif
-endfunction
-
 
 let s:kind.action_table.edit = {
             \ 'description' : 'Edit the gist as a file.',

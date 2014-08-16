@@ -8,19 +8,6 @@ let s:unite_source = {
             \ 'action_table': {}
             \ }
 
-let s:unite_source.action_table.open = {
-            \ 'description' : 'Open Url in a browser',
-            \ 'is_quit' : 0
-            \ }
-
-function! s:unite_source.action_table.open.func(candidate)
-    if has('unix')
-        call system('xdg-open https://github.com/'.a:candidate.word.' &')
-    elseif has('mac')
-        call system('open https://github.com/'.a:candidate.word.' &')
-    endif
-endfunction
-
 let s:unite_source.action_table.clone = {
             \ 'description' : 'Clone the repo somewhere',
             \ 'is_quit' : 1
@@ -45,9 +32,10 @@ function! s:unite_source.hooks.on_init(args, context)
     call unite#print_source_message('Fetching repos info from the server ...', s:unite_source.name)
     let s:candidates = map(
                 \ s:http_get(a:context.source__input, a:context.winheight),
-                \ '{"word": v:val,
-                \ "kind": "file",
-                \ "source": "github"
+                \ '{"word" : v:val,
+                \ "action__uri" : "https:/github.com/".v:val,
+                \ "kind" : "uri",
+                \ "source" : "github"
                 \ }')
 endfunction
 

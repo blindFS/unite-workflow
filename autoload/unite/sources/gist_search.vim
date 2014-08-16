@@ -14,13 +14,6 @@ let s:unite_source = {
             \ 'syntax' : 'uniteSource__gist'
             \ }
 
-" function! s:unite_source.hooks.on_syntax(args, context)
-"     syntax match uniteSource__gist_user /.*\ze\// contained containedin=uniteSource__gist
-"     syntax match uniteSource__gist_fname /[ \t]\+.*$/ contained containedin=uniteSource__gist contains=uniteCandidateInputKeyword
-"     highlight default link uniteSource__gist_user Constant
-"     highlight default link uniteSource__gist_fname Keyword
-" endfunction
-
 function! s:unite_source.hooks.on_init(args, context)
     let a:context.source__input =
                 \ unite#util#input('Please input search words: ', '')
@@ -48,7 +41,7 @@ function! s:extract_entry(line)
     let filename = matchstr(a:line, 'class="css-truncate-target">\zs[^<]\+\ze<')
     return {
                 \ 'id' : id,
-                \ 'url' : 'https://gist.github.com/'.uri,
+                \ 'action__uri' : 'https://gist.github.com/'.uri,
                 \ 'fname' : filename,
                 \ 'word' : uri.'	'.filename,
                 \ 'kind' : 'gist',

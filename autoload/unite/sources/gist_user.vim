@@ -39,7 +39,7 @@ function! s:extract_entry(dict)
     let id = a:dict.id
     return {
                 \ 'id' : id,
-                \ 'url' : a:dict.html_url,
+                \ 'action__uri' : a:dict.html_url,
                 \ 'word' : s:username.'/'.id.'	'.fname,
                 \ 'kind' : 'gist',
                 \ 'source' : 'gist/user'
