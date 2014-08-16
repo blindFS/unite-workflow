@@ -36,12 +36,7 @@ function! s:unite_source.action_table.clone.func(candidate)
     let command = 'git clone https://github.com/'.a:candidate.word.' '.destdir
     call unite#print_source_message('Cloning the repo to '.destdir.'...', s:unite_source.name)
     call system(command)
-    if exists(':VimFilerClose')
-        VimFilerClose explorer
-    endif
-    if exists(':VimFilerExplorer')
-        execute('VimFilerExplorer '.destdir)
-    endif
+    execute 'Unite file:'.destdir
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
