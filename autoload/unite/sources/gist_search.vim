@@ -9,16 +9,27 @@ endif
 let s:candidates = []
 let s:unite_source = {
             \ 'name': 'gist/search',
-            \ 'hooks' : {'on_syntax' : function('unite#kinds#gist#on_syntax')},
+            \ 'hooks' : {
+            \   'on_syntax' : function('unite#kinds#gist#on_syntax')
+            \ },
             \ 'action_table': {},
             \ 'syntax' : 'uniteSource__gist'
             \ }
 
 function! s:unite_source.hooks.on_init(args, context)
+    if exists('s:loaded')
+        return
+    endif
     let a:context.source__input =
                 \ unite#util#input('Please input search words: ', '')
     call unite#print_source_message('Fetching gists info from the server ...', 'gist/search')
     let s:candidates = s:http_get(a:context.source__input)
+    call unite#clear_message()
+    let s:loaded = 1
+endfunction
+
+function! s:unite_source.hooks.on_close(args, context)
+    unlet s:loaded
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)

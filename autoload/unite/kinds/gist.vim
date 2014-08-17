@@ -7,18 +7,29 @@ endfunction
 
 let s:kind = {
             \ 'name' : 'gist',
-            \ 'default_action' : 'edit',
+            \ 'default_action' : 'start',
             \ 'action_table' : {},
             \ 'parents' : ['uri']
             \ }
 
 let s:kind.action_table.edit = {
             \ 'description' : 'Edit the gist as a file.',
-            \ 'is_quit' : 1
+            \ 'is_selectable' : 1
             \ }
 
-function! s:kind.action_table.edit.func(candidate)
-    execute 'Gist '.a:candidate.id
+function! s:kind.action_table.edit.func(candidates)
+    for candidate in a:candidates
+        execute 'Gist '.candidate.id
+    endfor
+endfunction
+
+let s:kind.action_table.start = {
+            \ 'description' : 'open uri by browser',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:kind.action_table.start.func(candidate)
+    call unite#take_parents_action('start', a:candidate, {})
 endfunction
 
 function! unite#kinds#gist#on_syntax(args, context)

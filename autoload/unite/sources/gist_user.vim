@@ -9,7 +9,9 @@ endif
 let s:candidates = []
 let s:unite_source = {
             \ 'name': 'gist/user',
-            \ 'hooks' : {'on_syntax' : function('unite#kinds#gist#on_syntax')},
+            \ 'hooks' : {
+            \   'on_syntax' : function('unite#kinds#gist#on_syntax')
+            \ },
             \ 'action_table': {},
             \ 'syntax' : 'uniteSource__gist'
             \ }
@@ -22,16 +24,25 @@ if !exists('g:github_user')
     end
 endif
 
-function! s:unite_source.gather_candidates(args, context)
-    return s:candidates
-endfunction
-
 function! s:unite_source.hooks.on_init(args, context)
+    if exists('s:loaded')
+        return
+    endif
     let s:username = get(a:args, 0, g:github_user)
     call unite#print_source_message('Fetching gists of user '.
                 \ s:username.' ...', 'gist/user')
     let gists = gist#list(s:username)
     let s:candidates = map(gists, 's:extract_entry(v:val)')
+    call unite#clear_message()
+    let s:loaded = 1
+endfunction
+
+function! s:unite_source.hooks.on_close(args, context)
+    unlet s:loaded
+endfunction
+
+function! s:unite_source.gather_candidates(args, context)
+    return s:candidates
 endfunction
 
 function! s:extract_entry(dict)

@@ -10,7 +10,6 @@ let s:unite_source = {
 
 let s:unite_source.action_table.clone = {
             \ 'description' : 'Clone the repo somewhere',
-            \ 'is_quit' : 1
             \ }
 
 function! s:unite_source.action_table.clone.func(candidate)
@@ -27,6 +26,9 @@ function! s:unite_source.action_table.clone.func(candidate)
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
+    if exists('s:loaded')
+        return
+    endif
     let a:context.source__input =
                 \ unite#util#input('Please input search words: ', '')
     call unite#print_source_message('Fetching repos info from the server ...', s:unite_source.name)
@@ -37,6 +39,11 @@ function! s:unite_source.hooks.on_init(args, context)
                 \ "kind" : "uri",
                 \ "source" : "github"
                 \ }')
+    let s:loaded = 1
+endfunction
+
+function! s:unite_source.hooks.on_close(args, context)
+    unlet s:loaded
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
