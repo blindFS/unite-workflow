@@ -25,11 +25,12 @@ endfunction
 
 let s:kind.action_table.start = {
             \ 'description' : 'open uri by browser',
+            \ 'is_selectable' : 1,
             \ 'is_quit' : 0
             \ }
 
-function! s:kind.action_table.start.func(candidate)
-    call unite#take_parents_action('start', a:candidate, {})
+function! s:kind.action_table.start.func(candidates)
+    call unite#take_action('start', a:candidates)
 endfunction
 
 function! unite#kinds#gist#on_syntax(args, context)

@@ -5,7 +5,8 @@ let s:candidates = []
 let s:unite_source = {
             \ 'name': 'github',
             \ 'hooks' : {},
-            \ 'action_table': {}
+            \ 'action_table': {},
+            \ 'syntax' : 'uniteSource__github'
             \ }
 
 let s:unite_source.action_table.clone = {
@@ -22,7 +23,18 @@ function! s:unite_source.action_table.clone.func(candidate)
     let command = 'git clone https://github.com/'.a:candidate.word.' '.destdir
     call unite#print_source_message('Cloning the repo to '.destdir.'...', s:unite_source.name)
     call system(command)
+    call unite#clear_message()
     execute 'Unite file:'.destdir
+endfunction
+
+let s:unite_source.action_table.start = {
+            \ 'description' : 'open uri by browser',
+            \ 'is_selectable' : 1,
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.start.func(candidates)
+    call unite#take_action('start', a:candidates)
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
@@ -39,6 +51,7 @@ function! s:unite_source.hooks.on_init(args, context)
                 \ "kind" : "uri",
                 \ "source" : "github"
                 \ }')
+    call unite#clear_message()
     let s:loaded = 1
 endfunction
 
@@ -47,8 +60,13 @@ function! s:unite_source.hooks.on_close(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
-    syntax match uniteSource__github_user /.*\ze\// contained containedin=ALL
+    syntax match uniteSource__github_user /.*\ze\//
+                \ contained containedin=uniteSource__github__repo
+    syntax match uniteSource__github_repo /.*/
+                \ contained containedin=uniteSource__github
+                \ contains=uniteCandidateInputKeyword,uniteSource__github_user
     highlight default link uniteSource__github_user Constant
+    highlight default link uniteSource__github_repo Keyword
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
