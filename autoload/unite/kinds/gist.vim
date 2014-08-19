@@ -9,7 +9,7 @@ let s:kind = {
             \ 'name' : 'gist',
             \ 'default_action' : 'start',
             \ 'action_table' : {},
-            \ 'parents' : ['uri']
+            \ 'parents' : ['link']
             \ }
 
 let s:kind.action_table.edit = {
@@ -23,19 +23,12 @@ function! s:kind.action_table.edit.func(candidates)
     endfor
 endfunction
 
-let s:kind.action_table.start = {
-            \ 'description' : 'open uri by browser',
-            \ 'is_selectable' : 1,
-            \ 'is_quit' : 0
-            \ }
-
-function! s:kind.action_table.start.func(candidates)
-    call unite#take_action('start', a:candidates)
-endfunction
-
 function! unite#kinds#gist#on_syntax(args, context)
-    syntax match uniteSource__gist_user /.*\ze\// contained containedin=uniteSource__gist
-    syntax match uniteSource__gist_fname /[ \t]\+.*$/ contained containedin=uniteSource__gist contains=uniteCandidateInputKeyword
+    syntax match uniteSource__gist_user /.*\ze\//
+                \ contained containedin=uniteSource__gist
+    syntax match uniteSource__gist_fname /[ \t]\+.*$/
+                \ contained containedin=uniteSource__gist
+                \ contains=uniteCandidateInputKeyword
     highlight default link uniteSource__gist_user Constant
     highlight default link uniteSource__gist_fname Keyword
 endfunction

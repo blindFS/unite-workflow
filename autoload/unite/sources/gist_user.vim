@@ -12,17 +12,8 @@ let s:unite_source = {
             \ 'hooks' : {
             \   'on_syntax' : function('unite#kinds#gist#on_syntax')
             \ },
-            \ 'action_table': {},
             \ 'syntax' : 'uniteSource__gist'
             \ }
-
-
-if !exists('g:github_user')
-    let g:github_user = system('git config --get github.user')[:-2]
-    if strlen(g:github_user) == 0
-        let g:github_user = $GITHUB_USER
-    end
-endif
 
 function! s:unite_source.hooks.on_init(args, context)
     if exists('s:loaded')

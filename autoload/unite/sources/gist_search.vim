@@ -12,7 +12,6 @@ let s:unite_source = {
             \ 'hooks' : {
             \   'on_syntax' : function('unite#kinds#gist#on_syntax')
             \ },
-            \ 'action_table': {},
             \ 'syntax' : 'uniteSource__gist'
             \ }
 
@@ -38,7 +37,6 @@ endfunction
 
 function! s:http_get(input)
     let param = {"q": a:input}
-
     let res = webapi#http#get("https://gist.github.com/search", param)
     let lines = split(res.content, '\n')
     let gists = filter(lines, 'v:val =~ "css-truncate-target"')

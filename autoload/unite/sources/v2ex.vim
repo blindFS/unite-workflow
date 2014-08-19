@@ -9,16 +9,6 @@ let s:unite_source = {
             \ 'syntax' : 'uniteSource__v2ex'
             \ }
 
-let s:unite_source.action_table.start = {
-            \ 'description' : 'open uri by browser',
-            \ 'is_selectable' : 1,
-            \ 'is_quit' : 0
-            \ }
-
-function! s:unite_source.action_table.start.func(candidates)
-    call unite#take_action('start', a:candidates)
-endfunction
-
 function! s:unite_source.hooks.on_init(args, context)
     if exists('s:loaded')
         return
@@ -59,7 +49,7 @@ function! s:extract_entry(dict)
                 \ 'action__uri' : a:dict.url,
                 \ 'node' : a:dict.node.id,
                 \ 'word' : a:dict.node.title.' ---- '.a:dict.title,
-                \ 'kind' : 'uri',
+                \ 'kind' : 'link',
                 \ 'source' : 'v2ex'}
 endfunction
 
