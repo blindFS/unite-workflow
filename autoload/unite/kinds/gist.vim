@@ -9,7 +9,7 @@ let s:kind = {
             \ 'name' : 'gist',
             \ 'default_action' : 'start',
             \ 'action_table' : {},
-            \ 'parents' : ['link']
+            \ 'parents' : ['uri']
             \ }
 
 let s:kind.action_table.edit = {

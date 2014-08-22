@@ -29,7 +29,9 @@ function! s:unite_source.hooks.on_init(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
-    unlet s:loaded
+    if exists('s:loaded')
+        unlet s:loaded
+    endif
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)

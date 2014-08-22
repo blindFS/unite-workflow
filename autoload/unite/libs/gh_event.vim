@@ -7,8 +7,11 @@ function! unite#libs#gh_event#on_syntax(args, context)
     syntax match uniteSource__github_repo /\s\+[^ ]\{-}\/[^ ]*/
                 \ contained containedin=uniteSource__github_event
                 \ contains=uniteCandidateInputKeyword
+    syntax match uniteSource__github_time /\d\+[mhd] ago/
+                \ contained containedin=uniteSource__github_event
     highlight default link uniteSource__github_user Constant
     highlight default link uniteSource__github_repo Keyword
+    highlight default link uniteSource__github_time String
 endfunction
 
 function! unite#libs#gh_event#get_event(target, source)
@@ -47,6 +50,9 @@ function! s:extract_entry(dict, source)
     elseif a:dict.type == 'IssueCommentEvent'
         let words = user.' --- commented on '.repo
         let url = a:dict.payload.issue.html_url
+    elseif a:dict.type == 'PullRequestReviewCommentEvent'
+        let words = user.' --- commented on '.repo
+        let url = a:dict.payload.comment.html_url
     elseif a:dict.type == 'CreateEvent'
         let words = user.' --- created '.repo
         let url = html_pre.repo
@@ -55,11 +61,33 @@ function! s:extract_entry(dict, source)
         let url = a:dict.payload.pages[0].html_url
     endif
     return {
+                \ 'id' : a:dict.actor.id,
+                \ 'icon' : a:dict.actor.avatar_url,
                 \ 'action__uri' : url,
-                \ 'word' : words,
-                \ 'kind' : 'link',
+                \ 'word' : words.s:date_diff(a:dict.created_at),
+                \ 'kind' : 'uri',
                 \ 'source' : 'github/'.a:source
                 \ }
+endfunction
+
+function! s:date_diff(date)
+python << EOF
+import vim
+import time
+from datetime import datetime
+
+date = vim.eval('a:date')
+d1 = datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+d2 = datetime.fromtimestamp(time.mktime(time.gmtime()))
+if (d2-d1).days > 0:
+    diff = str((d2-d1).days) + 'd ago'
+elif (d2-d1).seconds/3600 > 0:
+    diff = str((d2-d1).seconds/3600) + 'h ago'
+else:
+    diff = str((d2-d1).seconds/60) + 'm ago'
+
+vim.command('return " '+diff+'"')
+EOF
 endfunction
 
 let &cpo = s:save_cpo

@@ -38,7 +38,7 @@ function! s:unite_source.hooks.on_init(args, context)
                 \ s:http_get(a:context.source__input, a:context.winheight),
                 \ '{"word" : v:val,
                 \ "action__uri" : "https:/github.com/".v:val,
-                \ "kind" : "link",
+                \ "kind" : "uri",
                 \ "source" : "github/search"
                 \ }')
     call unite#clear_message()
@@ -46,7 +46,9 @@ function! s:unite_source.hooks.on_init(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
-    unlet s:loaded
+    if exists('s:loaded')
+        unlet s:loaded
+    endif
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
