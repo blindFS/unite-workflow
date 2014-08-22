@@ -11,7 +11,7 @@ function! unite#libs#uri#show_icon(download, context, candidates)
         call mkdir(dir, 'p')
     endif
     let bufn = bufnr(a:context.buffer_name)
-    if bufn == -1
+    if bufn == -1 || len(getbufline(bufn, 1, '$')) < len(a:candidates)
         return 0
     endif
     execute 'sign unplace * buffer=' . bufn
