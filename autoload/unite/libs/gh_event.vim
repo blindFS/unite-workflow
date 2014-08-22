@@ -53,12 +53,36 @@ function! s:extract_entry(dict, source)
     elseif a:dict.type == 'PullRequestReviewCommentEvent'
         let words = user.' --- commented on '.repo
         let url = a:dict.payload.comment.html_url
+    elseif a:dict.type == 'CommitCommentEvent'
+        let words = user.' --- commented on '.repo
+        let url = a:dict.payload.comment.html_url
     elseif a:dict.type == 'CreateEvent'
         let words = user.' --- created '.repo
+        let url = html_pre.repo
+    elseif a:dict.type == 'DeleteEvent'
+        let words = user.' --- deleted a '.
+                    \ a:dict.payload.ref_type .
+                    \ ' on '.repo
         let url = html_pre.repo
     elseif a:dict.type == 'GollumEvent'
         let words = user.' --- gollum '.repo
         let url = a:dict.payload.pages[0].html_url
+    elseif a:dict.type == 'MemberEvent'
+        let words = user.' --- '.
+                    \ a:dict.payload.action . ' '.
+                    \ a:dict.payload.member . ' to '.repo
+        let url = html_pre.repo
+    elseif a:dict.type == 'PublicEvent'
+        let words = user.' --- opened '.repo
+        let url = html_pre.repo
+    elseif a:dict.type == 'ReleaseEvent'
+        let words = user.' --- published '.
+                    \ a:dict.payload.release.tag_name
+                    \ .' of '.repo
+        let url = a:dict.payload.release.html_url
+    else
+        let words = ''
+        let url = html_pre
     endif
     return {
                 \ 'id' : a:dict.actor.id,
