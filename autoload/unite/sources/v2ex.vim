@@ -68,10 +68,9 @@ function! s:refresh()
 endfunction
 
 function! s:http_get()
-    let res = webapi#http#get("http://v2ex.com/api/topics/latest.json")
+    let res = webapi#http#get('http://v2ex.com/api/topics/latest.json')
     let content = webapi#json#decode(res.content)
-    let entries = map(content, 's:extract_entry(v:val)')
-    return entries
+    return map(content, 's:extract_entry(v:val)')
 endfunction
 
 function! s:extract_entry(dict)
