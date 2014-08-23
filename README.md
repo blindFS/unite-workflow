@@ -1,7 +1,7 @@
 ## What the hell?
 
 I suppose you know what alfred-workflow is.
-This vim plugin is a collection of unite.vim extentions as a alternative of that.
+This vim plugin is a collection of unite.vim extentions as a alternative to it.
 
 ### github events
 
@@ -20,11 +20,14 @@ Search for github repos by keywords.
 ### gist user
 
 NOTE:This feature requires [gist-vim](https://github.com/mattn/gist-vim).
+
 ![gu](./screenshots/gist_user.png)
+
 List public gists created by a certain user(defaults to g:github_user).
 Actions:
-    * edit, open with `:Gist id`.
-    * start, open in a browser.
+
+* edit, open with `:Gist id`.
+* start, open in a browser.
 
 ### gist searching
 
@@ -44,11 +47,13 @@ If used with input, the input is taken as subreddit like this:
 ### v2ex
 
 Latest topics of http://www.v2ex.com
+
 ![v2](./screenshots/v2ex.png)
 
 ### youdao
 
 有道词典/翻译
+
 ![yd](./screenshots/youdao.png)
 
 ## Installation
