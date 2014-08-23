@@ -56,6 +56,12 @@ Latest topics of http://www.v2ex.com
 
 ![yd](./screenshots/youdao.png)
 
+### apropos
+
+Fast manpage access.
+
+![ap](./screenshots/apropos.png)
+
 ## Installation
 
 You need these plugins installed and loaded.
