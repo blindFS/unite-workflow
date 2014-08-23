@@ -54,7 +54,7 @@ function! s:refresh(args)
     if subreddit != ''
         let url = url_pre.'/r/'.subreddit.'/hot.json'
     else
-        let url = get(g:, 'unite#reddit#front', url_pre.'/hot.json')
+        let url = get(g:, 'unite#workflow#reddit#front', url_pre.'/hot.json')
     endif
     let s:candidates = s:http_get(url)
     call unite#clear_message()
