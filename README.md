@@ -75,6 +75,12 @@ defaults to `/usr/share/figlet`.
 
 ![tl](./screenshots/toilet.png)
 
+### emoji
+
+Search for emoji by description.
+
+![em](./screenshots/emoji.png)
+
 ## Installation
 
 You need these plugins installed and loaded.
@@ -84,6 +90,16 @@ You need these plugins installed and loaded.
 * [gist-vim](https://github.com/mattn/gist-vim) for gist sources
 
 Then just use your preferred managing tool for this plugin.
+If you'd like to load just a part of these features. I suggest that you use neobundle.vim:
+
+``` vim
+NeoBundleLazy 'farseer90718/unite-workflow', {
+            \ 'unite_sources' : [ your-list ],
+            \ 'depends' : [
+            \   'mattn/webapi-vim',
+            \   'mattn/gist-vim']
+            \ }
+```
 
 ## Customization
 

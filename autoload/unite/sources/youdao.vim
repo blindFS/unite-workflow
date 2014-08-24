@@ -69,7 +69,7 @@ function! s:extract_entry(dict)
     let explanation = join(map(get(basic, 'explains', []), '"    * ".v:val'), "\n")
     return {
                 \ 'word' : join([
-                \       'Query:', s:input,
+                \       'Query:', '    '.s:input,
                 \       'Translation:', translation,
                 \       'Phonetic:', phonetic,
                 \       'Explanation:', explanation],
