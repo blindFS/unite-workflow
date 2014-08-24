@@ -3,7 +3,8 @@ set cpo&vim
 
 let s:candidates = []
 let s:unite_source = {
-            \ 'name': 'reddit',
+            \ 'name' : 'reddit',
+            \ 'description' : 'Latest topics from http://www.reddit.com',
             \ 'hooks' : {},
             \ 'action_table': {},
             \ 'syntax' : 'uniteSource__reddit'

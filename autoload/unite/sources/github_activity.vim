@@ -7,7 +7,8 @@ function! unite#sources#github_activity#define()
     let sources = []
     for source in ['feed', 'event']
         let s:unite_source = {
-                    \ 'name': 'github/'.source,
+                    \ 'name' : 'github/'.source,
+                    \ 'description' : 'Github '.source.'s of a certain user.',
                     \ 'hooks' : {
                     \   'on_syntax' : function('unite#libs#gh_event#on_syntax')
                     \ },

@@ -8,7 +8,8 @@ endif
 
 let s:candidates = []
 let s:unite_source = {
-            \ 'name': 'gist/user',
+            \ 'name' : 'gist/user',
+            \ 'description' : 'List public gists created by a certain user.',
             \ 'hooks' : {
             \   'on_syntax' : function('unite#kinds#gist#on_syntax')
             \ },

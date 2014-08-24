@@ -8,7 +8,8 @@ endif
 
 let s:candidates = []
 let s:unite_source = {
-            \ 'name': 'gist/search',
+            \ 'name' : 'gist/search',
+            \ 'description' : 'Search for gists.',
             \ 'hooks' : {
             \   'on_syntax' : function('unite#kinds#gist#on_syntax')
             \ },
@@ -19,7 +20,8 @@ function! s:unite_source.hooks.on_init(args, context)
     if exists('s:loaded')
         return
     endif
-    let input =
+    let input = get(a:args, 0, '')
+    let input = input != '' ? input :
                 \ unite#util#input('Please input search words: ', '')
     call unite#print_source_message('Fetching gists info from the server ...', 'gist/search')
     let s:candidates = s:http_get(input)

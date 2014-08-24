@@ -3,7 +3,8 @@ set cpo&vim
 
 let s:candidates = []
 let s:unite_source = {
-            \ 'name': 'github/search',
+            \ 'name' : 'github/search',
+            \ 'description' : 'Search for github repositories.',
             \ 'hooks' : {},
             \ 'action_table': {},
             \ 'syntax' : 'uniteSource__github'
@@ -31,11 +32,12 @@ function! s:unite_source.hooks.on_init(args, context)
     if exists('s:loaded')
         return
     endif
-    let a:context.source__input =
+    let input = get(a:args, 0, '')
+    let input = input != '' ? input :
                 \ unite#util#input('Please input search words: ', '')
     call unite#print_source_message('Fetching repos info from the server ...',
                 \ s:unite_source.name)
-    let s:candidates = s:http_get(a:context.source__input, a:context.winheight)
+    let s:candidates = s:http_get(input, a:context.winheight)
     call unite#clear_message()
     let s:loaded = 1
 endfunction

@@ -3,6 +3,7 @@ set cpo&vim
 
 let s:unite_source = {
             \ 'name': 'apropos',
+            \ 'description' : 'Search for manpage using apropos.',
             \ 'required_pattern_length': 2,
             \ 'is_volatile': 1,
             \ 'hooks' : {},

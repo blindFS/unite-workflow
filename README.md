@@ -97,6 +97,8 @@ call unite#custom#profile(
             \ {
             \   'max_multi_lines' : 10
             \ })
+
+nnoremap <leader>t  :Unite youdao:<CR>
 ```
 
 ## License

@@ -3,7 +3,8 @@ set cpo&vim
 
 let s:candidates = []
 let s:unite_source = {
-            \ 'name': 'youdao',
+            \ 'name' : 'youdao',
+            \ 'description' : '有道词典',
             \ 'hooks' : {},
             \ 'syntax' : 'uniteSource__youdao'
             \ }
@@ -40,6 +41,9 @@ function! s:unite_source.hooks.on_syntax(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        let s:candidates = s:http_get(a:context.input)
+    endif
     return s:candidates
 endfunction
 
