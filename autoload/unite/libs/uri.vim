@@ -1,6 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:signs = {}
 function! unite#libs#uri#show_icon(download, context, candidates)
     if !executable('wget') || !has('gui_running') ||
                 \ !unite#util#has_vimproc() || !g:unite#workflow#show_icon
@@ -27,6 +28,9 @@ function! unite#libs#uri#show_icon(download, context, candidates)
             let finished = 0
             call vimproc#popen2('wget ' . cand.icon . ' -O '.icon)
         else
+            if a:download
+                let s:signs[cand.id] = 1
+            endif
             try
                 execute 'sign define workflow_' . cand.id . ' icon='.icon
                 execute 'sign place ' . (index+10) . ' line='.line.' name=workflow_'
@@ -43,6 +47,16 @@ function! unite#libs#uri#show_icon(download, context, candidates)
         augroup END
     endif
     return finished
+endfunction
+
+function! unite#libs#uri#clear_sign()
+    execute 'sign unplace * buffer=' . bufnr('%')
+    for id in keys(s:signs)
+        try
+            execute 'sign undefine workflow_'.id
+        catch
+        endtry
+    endfor
 endfunction
 
 let &cpo = s:save_cpo

@@ -56,11 +56,24 @@ Latest topics of http://www.v2ex.com
 
 ![yd](./screenshots/youdao.png)
 
+### wikipedia
+
+Search for wiki, list matching entries, open selected in a browser.
+
 ### apropos
 
 Fast manpage access.
 
 ![ap](./screenshots/apropos.png)
+
+### toilet
+
+Note: this feature requires executable 'toilet' or 'figlet'.
+
+Use `g:unite#workflow#figlet_font_dir` to specify where the fonts are stored,
+defaults to `/usr/share/figlet`.
+
+![tl](./screenshots/toilet.png)
 
 ## Installation
 
@@ -85,19 +98,17 @@ call unite#custom#profile(
             \ 'source/github/search, source/github/event, '.
             \ 'source/github/feed, source/gist/search, '.
             \ 'source/gist/user, source/v2ex, '.
-            \ 'source/reddit',
-            \ 'context',
-            \ {
+            \ 'source/reddit, source/wikipedia',
+            \ 'context', {
             \   'keep_focus' : 1,
             \   'no_quit' : 1
             \ })
 call unite#custom#profile(
-            \ 'source/youdao',
-            \ 'context',
-            \ {
-            \   'max_multi_lines' : 10
+            \ 'source/youdao, source/toilet',
+            \ 'context', {
+            \   'max_multi_lines' : 20,
+            \   'winheight' : 20
             \ })
-
 nnoremap <leader>t  :Unite youdao:<CR>
 ```
 

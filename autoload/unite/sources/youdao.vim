@@ -14,10 +14,10 @@ function! s:unite_source.hooks.on_init(args, context)
         return
     endif
     let input = get(a:args, 0, '')
-    let input = input != '' ? input :
+    let s:input = input != '' ? input :
                 \ unite#util#input('Phrase to translate: ', '')
     call unite#print_source_message('Translating ...', 'youdao')
-    let s:candidates = s:http_get(input)
+    let s:candidates = s:http_get(s:input)
     call unite#clear_message()
     let s:loaded = 1
 endfunction
@@ -29,7 +29,7 @@ function! s:unite_source.hooks.on_close(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
-    syntax match uniteSource__youdao_kw /Translation:\|Explanation:\|Phonetic:/
+    syntax match uniteSource__youdao_kw /Translation:\|Explanation:\|Phonetic:\|Query:/
                 \ contained containedin=uniteSource__youdao
     syntax match uniteSource__youdao_ph /\[.*\]/
                 \ contained containedin=uniteSource__youdao
@@ -42,7 +42,8 @@ endfunction
 
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
-        let s:candidates = s:http_get(a:context.input)
+        let s:input = a:context.input
+        let s:candidates = s:http_get(s:input)
     endif
     return s:candidates
 endfunction
@@ -67,7 +68,12 @@ function! s:extract_entry(dict)
     let phonetic = '    ['.get(basic, 'phonetic', '').']'
     let explanation = join(map(get(basic, 'explains', []), '"    * ".v:val'), "\n")
     return {
-                \ 'word' : join(['Translation:', translation, 'Phonetic:', phonetic, 'Explanation:', explanation], "\n"),
+                \ 'word' : join([
+                \       'Query:', s:input,
+                \       'Translation:', translation,
+                \       'Phonetic:', phonetic,
+                \       'Explanation:', explanation],
+                \       "\n"),
                 \ 'kind' : 'word',
                 \ 'is_multiline' : 1,
                 \ 'source' : 'youdao'}

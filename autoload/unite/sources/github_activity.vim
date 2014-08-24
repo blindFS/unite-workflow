@@ -25,7 +25,7 @@ function! unite#sources#github_activity#define()
         endfunction
 
         function! s:unite_source.hooks.on_close(args, context)
-            execute 'sign unplace * buffer=' . bufnr('%')
+            call unite#libs#uri#clear_sign()
             if exists('s:loaded')
                 unlet s:loaded
             endif
