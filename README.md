@@ -58,12 +58,15 @@ Fast manpage access.
 
 Note: this feature requires executable 'toilet' or 'figlet'.
 
-Use `g:unite#workflow#figlet_font_dir` to specify where the fonts are stored,
+Use `g:unite#workflow#figlet_fonts#dir` to specify where the fonts are stored,
 defaults to `/usr/share/figlet`.
 
 ![tl](./screenshots/toilet.png)
 
 ### emoji
+
+Note: You may need extra font packages for correct displaying.
+For example, arch users need ttf-symbola in AUR.
 
 Search for emoji by description.
 
@@ -111,6 +114,8 @@ NeoBundleLazy 'farseer90718/unite-workflow', {
 
 * `g:unite#workflow#show_icon` 0 to disable avatar display.
 * `g:unite#workflow#reddit#front` as described above.
+* `g:unite#workflow#figlet_fonts#dir` as described above.
+* `g:unite#workflow#player` defaults to 'mplayer'.
 
 Example:
 
@@ -131,7 +136,7 @@ call unite#custom#profile(
             \   'max_multi_lines' : 20,
             \   'winheight' : 20
             \ })
-nnoremap <leader>t  :Unite youdao:<CR>
+nnoremap <leader>t  :Unite youdao:<C-R><C-W><CR>
 ```
 
 ## License

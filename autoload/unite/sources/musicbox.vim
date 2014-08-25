@@ -15,10 +15,10 @@ function! s:unite_source.hooks.on_init(args, context)
         return
     endif
     let input = get(a:args, 0, '')
-    let input = input != '' ? input :
+    let s:input = input != '' ? input :
                 \ unite#util#input('Search for songs: ', '')
     call unite#print_source_message('Searching ...', 'musicbox')
-    let s:candidates = s:http_get(input)
+    let s:candidates = s:http_get(s:input)
     call unite#clear_message()
     let s:loaded = 1
 endfunction
@@ -41,7 +41,7 @@ endfunction
 
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
-        let s:candidates = s:http_get(a:context.input)
+        let s:candidates = s:http_get(s:input)
     endif
     return s:candidates
 endfunction
