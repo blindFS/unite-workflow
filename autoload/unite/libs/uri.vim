@@ -12,18 +12,21 @@ function! unite#libs#uri#show_icon(download, context, candidates)
         call mkdir(dir, 'p')
     endif
     let bufn = bufnr(a:context.buffer_name)
-    if bufn == -1 || len(getbufline(bufn, 1, '$')) < len(a:candidates)
+    let bufw = bufwinnr(a:context.buffer_name)
+    if bufw == -1 || (len(getbufline(bufn, 1, '$')) < len(a:candidates)
+                \ && a:context.direction =~ '^b')
         return 0
     endif
     execute 'sign unplace * buffer=' . bufn
 
     let finished = 1
+    let prompt = getline(1) =~ '^[\t ]*'.a:context.prompt
     for index in range(len(a:candidates))
         let cand = a:candidates[index]
         let icon = dir. cand.id . '.png'
         let line = a:context.direction =~ '^b' ?
                     \ (len(a:candidates) - index) :
-                    \ (index+a:context.start_insert+1)
+                    \ (index+prompt+1)
         if !filereadable(icon) && a:download
             let finished = 0
             call vimproc#popen2('wget ' . cand.icon . ' -O '.icon)
