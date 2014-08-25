@@ -44,18 +44,6 @@ If used with input, the input is taken as subreddit like this:
 
 ![re](./screenshots/reddit.png)
 
-### v2ex
-
-Latest topics of http://www.v2ex.com
-
-![v2](./screenshots/v2ex.png)
-
-### youdao
-
-有道词典/翻译
-
-![yd](./screenshots/youdao.png)
-
 ### wikipedia
 
 Search for wiki, list matching entries, open selected in a browser.
@@ -80,6 +68,24 @@ defaults to `/usr/share/figlet`.
 Search for emoji by description.
 
 ![em](./screenshots/emoji.png)
+
+### v2ex
+
+Latest topics of http://www.v2ex.com
+
+![v2](./screenshots/v2ex.png)
+
+### youdao
+
+有道词典/翻译
+
+![yd](./screenshots/youdao.png)
+
+### musicbox
+
+网易云音乐搜索
+
+![163](./screenshots/musicbox.png)
 
 ## Installation
 
