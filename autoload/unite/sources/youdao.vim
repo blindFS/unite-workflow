@@ -43,7 +43,9 @@ endfunction
 
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
-        let s:input = a:context.input
+        if a:context.input != ''
+            let s:input = a:context.input
+        endif
         let s:candidates = s:http_get(s:input)
     endif
     return s:candidates
