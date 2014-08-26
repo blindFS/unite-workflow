@@ -1,0 +1,96 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
+let s:candidates = []
+let s:unite_source = {
+            \ 'name' : 'youtube',
+            \ 'description' : 'youtube search.',
+            \ 'hooks' : {},
+            \ 'syntax' : 'uniteSource__youtube'
+            \ }
+
+function! s:unite_source.hooks.on_init(args, context)
+    if exists('s:loaded')
+        return
+    endif
+    let input = get(a:args, 0, '')
+    let s:input = input != '' ? input :
+                \ unite#util#input('Searching keyword: ', '')
+    call unite#print_source_message('Searching ...', 'youtube')
+    let s:candidates = s:http_get(s:input)
+    call unite#clear_message()
+    let s:loaded = 1
+endfunction
+
+function! s:unite_source.hooks.on_close(args, context)
+    if exists('s:loaded')
+        unlet s:loaded
+    endif
+endfunction
+
+function! s:unite_source.hooks.on_syntax(args, context)
+    syntax match uniteSource__youtube_kind /video\|channel\|playlist/
+                \ contained containedin=uniteSource__youtube
+    syntax match uniteSource__youtube_channel /【.*】/
+                \ contained containedin=uniteSource__youtube
+    highlight default link uniteSource__youtube_kind Constant
+    highlight default link uniteSource__youtube_channel Keyword
+endfunction
+
+function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        if a:context.input != ''
+            let s:input = a:context.input
+        endif
+        call unite#print_source_message('Searching ...', 'youtube')
+        let s:candidates = s:http_get(s:input)
+        call unite#clear_message()
+    endif
+    return s:candidates
+endfunction
+
+function! s:http_get(input)
+    let param = {
+                \ 'key' : 'AIzaSyAATDG2sY41TYQyH_tN5S-styaWT9kouDM',
+                \ 'part' : 'snippet',
+                \ 'maxResults' : 15,
+                \ 'q' : a:input
+                \ }
+    let res = webapi#http#get('https://www.googleapis.com/youtube/v3/search', param)
+    let content = webapi#json#decode(res.content)
+    if !has_key(content, 'items')
+        return []
+    endif
+    return map(content.items, 's:extract_entry(v:val)')
+endfunction
+
+function! s:extract_entry(dict)
+    let html_pre = 'https://www.youtube.com/'
+    let title = a:dict.snippet.title
+    let channel = a:dict.snippet.channelTitle
+    let channel = channel == '' ? 'Unknown' : channel
+    let kind = split(a:dict.id.kind, '#')[1]
+
+    if kind == 'video'
+        let uri = html_pre.'watch?v='.a:dict.id.videoId
+    elseif kind == 'channel'
+        let uri = html_pre.'channel/'.a:dict.id.channelId
+    elseif kind == 'playlist'
+        let uri = html_pre.'/playlist?list='.a:dict.id.playlistId
+    else
+        let uri = html_pre
+    endif
+
+    return {
+                \ 'word' : kind.' -- 【'.channel.'】 -- '.title,
+                \ 'kind' : 'media',
+                \ 'action__uri' : uri,
+                \ 'source' : 'youtube'}
+endfunction
+
+function! unite#sources#youtube#define()
+    return s:unite_source
+endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

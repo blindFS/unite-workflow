@@ -84,6 +84,9 @@ function! s:http_get(input, number)
                 \ "per_page": a:number }
     let res = webapi#http#get("https://api.github.com/search/repositories", param)
     let content = webapi#json#decode(res.content)
+    if !has_key(content, 'items')
+        return []
+    endif
     return map(content.items, 's:extract_entry(v:val)')
 endfunction
 

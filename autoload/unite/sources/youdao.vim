@@ -16,6 +16,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let s:input = input != '' ? input :
                 \ unite#util#input('Phrase to translate: ', '')
+    let s:input = s:input == '' ? 'Invalid input' : s:input
     call unite#print_source_message('Translating ...', 'youdao')
     let s:candidates = s:http_get(s:input)
     call unite#clear_message()

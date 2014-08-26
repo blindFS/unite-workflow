@@ -48,6 +48,10 @@ If used with input, the input is taken as subreddit like this:
 
 Search for wiki, list matching entries, open selected in a browser.
 
+### youtube
+
+Search youtube, playlist/channel/video ...
+
 ### apropos
 
 Fast manpage access.
