@@ -17,6 +17,16 @@ Fetch github timeline of a certain user(defaults to g:github_user).
 
 Search for github repos by keywords.
 
+### github issues
+
+NOTE:
+
+* In order edit issues or create new issue, you'll need [github-issues.vim](https://github.com/jaxbot/github-issues.vim)
+* The default repository(if input omitted) is fetched by `git remote -v`.
+* You could use input to specify a certain project, in the format of 'owner/repo'
+
+![gi](./screenshots/github_issue.png)
+
 ### gist user
 
 NOTE:This feature requires [gist-vim](https://github.com/mattn/gist-vim).
@@ -100,7 +110,8 @@ You need these plugins installed and loaded.
 
 * [unite.vim](https://github.com/shougo/unite.vim)
 * [webapi-vim](https://github.com/mattn/webapi-vim)
-* [gist-vim](https://github.com/mattn/gist-vim) for gist sources
+* [github-issues.vim](https://github.com/jaxbot/github-issues.vim) for github issue editing/creating.
+* [gist-vim](https://github.com/mattn/gist-vim) for gist sources.
 
 Then just use your preferred managing tool for this plugin.
 If you'd like to load just a part of these features. I suggest that you use neobundle.vim:
@@ -110,7 +121,8 @@ NeoBundleLazy 'farseer90718/unite-workflow', {
             \ 'unite_sources' : [ your-list ],
             \ 'depends' : [
             \   'mattn/webapi-vim',
-            \   'mattn/gist-vim']
+            \   'mattn/gist-vim',
+            \   'jaxbot/github-issues.vim']
             \ }
 ```
 

@@ -35,11 +35,11 @@ endfunction
 
 function! unite#sources#emoji#define()
     if executable('ag')
-        let s:command = 'ag --nocolor -i %s '.s:dict
+        let s:command = 'ag --nocolor -i "%s" '.s:dict
     elseif executable('ack')
-        let s:command = 'ack --nocolor -i %s '.s:dict
+        let s:command = 'ack --nocolor -i "%s" '.s:dict
     elseif executable('grep')
-        let s:command = 'grep -i %s '.s:dict
+        let s:command = 'grep -i "%s" '.s:dict
     else
         return []
     endif
