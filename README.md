@@ -54,6 +54,14 @@ If used with input, the input is taken as subreddit like this:
 
 ![re](./screenshots/reddit.png)
 
+### twitter
+
+Twitter timeline.
+
+TODO: other ops like reply/retweet/create.
+
+![tw](./screenshots/twitter.png)
+
 ### wikipedia
 
 Search for wiki, list matching entries, open selected in a browser.

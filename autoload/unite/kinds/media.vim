@@ -2,6 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! unite#kinds#media#define()
+    let g:unite#workflow#player = get(g:, 'unite#workflow#player', 'mplayer')
     return s:kind
 endfunction
 
@@ -22,7 +23,6 @@ function! s:kind.action_table.open.func(candidate)
         echoerr 'You want to play it directly? You should have you-get installed.'.
         return
     endif
-    let g:unite#workflow#player = get(g:, 'unite#workflow#player', 'mplayer')
     if !executable(g:unite#workflow#player)
         echoerr 'No '.g:unite#workflow#player.' in $PATH, you may need to change g:unite#workflow#player.'
     endif
