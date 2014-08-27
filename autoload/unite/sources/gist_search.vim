@@ -23,9 +23,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let input = input != '' ? input :
                 \ unite#util#input('Please input search words: ', '')
-    call unite#print_source_message('Fetching gists info from the server ...', 'gist/search')
-    let s:candidates = s:http_get(input)
-    call unite#clear_message()
+    call s:refresh(input)
     let s:loaded = 1
 endfunction
 
@@ -36,6 +34,12 @@ function! s:unite_source.hooks.on_close(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        if a:context.input != ''
+            let input = a:context.input
+            call s:refresh(input)
+        endif
+    endif
     return s:candidates
 endfunction
 
@@ -58,6 +62,13 @@ function! s:extract_entry(line)
                 \ 'word' : uri.'	'.filename,
                 \ 'kind' : 'gist',
                 \ 'source' : 'gist/search'}
+endfunction
+
+function! s:refresh(input)
+    call unite#print_source_message('Fetching gists info from the server ...',
+                \ 'gist/search')
+    let s:candidates = s:http_get(a:input)
+    call unite#clear_message()
 endfunction
 
 function! unite#sources#gist_search#define()

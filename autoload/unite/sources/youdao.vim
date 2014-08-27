@@ -14,12 +14,10 @@ function! s:unite_source.hooks.on_init(args, context)
         return
     endif
     let input = get(a:args, 0, '')
-    let s:input = input != '' ? input :
+    let input = input != '' ? input :
                 \ unite#util#input('Phrase to translate: ', '')
-    let s:input = s:input == '' ? 'Invalid input' : s:input
-    call unite#print_source_message('Translating ...', 'youdao')
-    let s:candidates = s:http_get(s:input)
-    call unite#clear_message()
+    let s:input = input == '' ? 'Invalid input' : input
+    call s:refresh(s:input)
     let s:loaded = 1
 endfunction
 
@@ -45,8 +43,8 @@ function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
         if a:context.input != ''
             let s:input = a:context.input
+            call s:refresh(s:input)
         endif
-        let s:candidates = s:http_get(s:input)
     endif
     return s:candidates
 endfunction
@@ -80,6 +78,12 @@ function! s:extract_entry(dict)
                 \ 'kind' : 'word',
                 \ 'is_multiline' : 1,
                 \ 'source' : 'youdao'}
+endfunction
+
+function! s:refresh(input)
+    call unite#print_source_message('Translating ...', 'youdao')
+    let s:candidates = s:http_get(s:input)
+    call unite#clear_message()
 endfunction
 
 function! unite#sources#youdao#define()

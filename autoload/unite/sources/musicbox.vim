@@ -15,11 +15,9 @@ function! s:unite_source.hooks.on_init(args, context)
         return
     endif
     let input = get(a:args, 0, '')
-    let s:input = input != '' ? input :
+    let input = input != '' ? input :
                 \ unite#util#input('Search for songs: ', '')
-    call unite#print_source_message('Searching ...', 'musicbox')
-    let s:candidates = s:http_get(s:input)
-    call unite#clear_message()
+    call s:refresh(input)
     let s:loaded = 1
 endfunction
 
@@ -42,11 +40,9 @@ endfunction
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
         if a:context.input != ''
-            let s:input = a:context.input
+            let input = a:context.input
+            call s:refresh(input)
         endif
-        call unite#print_source_message('Searching ...', 'musicbox')
-        let s:candidates = s:http_get(s:input)
-        call unite#clear_message()
     endif
     return s:candidates
 endfunction
@@ -80,6 +76,12 @@ function! s:extract_entry(dict)
                 \ 'action__uri' : s:url_pre.'#/song?id='.a:dict.id,
                 \ 'kind' : 'media',
                 \ 'source' : 'musicbox'}
+endfunction
+
+function! s:refresh(input)
+    call unite#print_source_message('Searching ...', 'musicbox')
+    let s:candidates = s:http_get(a:input)
+    call unite#clear_message()
 endfunction
 
 function! unite#sources#musicbox#define()

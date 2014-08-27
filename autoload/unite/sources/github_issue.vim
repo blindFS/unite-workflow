@@ -17,10 +17,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let repo = input != '' ? input :
                 \ s:get_current_repo()
-    call unite#print_source_message('Getting issues of '.repo.' from the server ...',
-                \ s:unite_source.name)
-    let s:candidates = s:http_get(repo)
-    call unite#clear_message()
+    call s:refresh(repo)
     let s:loaded = 1
 endfunction
 
@@ -50,6 +47,12 @@ function! s:unite_source.hooks.on_post_filter(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        if a:context.input != ''
+            let repo = a:context.input
+            call s:refresh(repo)
+        endif
+    endif
     return s:candidates
 endfunction
 
@@ -72,7 +75,8 @@ endfunction
 function! s:extract_entry(dict)
     let user = a:dict.user.login
     let title = a:dict.title
-    let labels = '【'.join(map(a:dict.labels, 'v:val.name'), ', ').'】'
+    let labels = join(map(a:dict.labels, 'v:val.name'), ', ')
+    let labels = labels == '' ? '' : '【'.labels.'】'
     return {
                 \ 'id' : a:dict.user.id,
                 \ 'icon' : a:dict.user.avatar_url,
@@ -92,6 +96,13 @@ function! s:get_current_repo()
         return 'farseer90718/unite-workflow'
     endif
     return matchstr(output[0], 'github.com[/:]\zs.*\ze\.git')
+endfunction
+
+function! s:refresh(repo)
+    call unite#print_source_message('Getting issues of '.a:repo.' from the server ...',
+                \ s:unite_source.name)
+    let s:candidates = s:http_get(a:repo)
+    call unite#clear_message()
 endfunction
 
 function! unite#sources#github_issue#define()

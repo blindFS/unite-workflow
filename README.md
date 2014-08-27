@@ -155,6 +155,11 @@ call unite#custom#profile(
 nnoremap <leader>t  :Unite youdao:<C-R><C-W><CR>
 ```
 
+## Tips
+
+* <C-L> to refresh (change input in a faster way) in some sources.
+* Some sources may have specialized actions, you can check the action list to find out.
+
 ## License
 
 MIT

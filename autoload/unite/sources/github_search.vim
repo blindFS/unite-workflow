@@ -35,10 +35,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let input = input != '' ? input :
                 \ unite#util#input('Please input search words: ', '')
-    call unite#print_source_message('Fetching repos info from the server ...',
-                \ s:unite_source.name)
-    let s:candidates = s:http_get(input, a:context.winheight)
-    call unite#clear_message()
+    call s:refresh(input, a:context.winheight)
     let s:loaded = 1
 endfunction
 
@@ -68,6 +65,12 @@ function! s:unite_source.hooks.on_post_filter(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        if a:context.input != ''
+            let input = a:context.input
+            call s:refresh(input, a:context.winheight)
+        endif
+    endif
     return s:candidates
 endfunction
 
@@ -100,6 +103,13 @@ function! s:extract_entry(dict)
                 \ 'source' : 'github/search'
                 \ }
 
+endfunction
+
+function! s:refresh(input, limit)
+    call unite#print_source_message('Fetching repos info from the server ...',
+                \ s:unite_source.name)
+    let s:candidates = s:http_get(a:input, a:limit)
+    call unite#clear_message()
 endfunction
 
 function! unite#sources#github_search#define()

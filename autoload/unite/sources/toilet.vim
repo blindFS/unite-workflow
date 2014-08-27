@@ -15,7 +15,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let input = input != '' ? input :
                 \ unite#util#input('String to convert: ', '')
-    let s:candidates = s:get_candidates(input)
+    call s:get_candidates(input)
     let s:loaded = 1
 endfunction
 
@@ -26,6 +26,12 @@ function! s:unite_source.hooks.on_close(args, context)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
+    if a:context.is_redraw
+        if a:context.input != ''
+            let input = a:context.input
+            call s:get_candidates(input)
+        endif
+    endif
     return s:candidates
 endfunction
 
@@ -45,7 +51,7 @@ function! s:get_candidates(input)
                     \ 'source' : 'toilet'
                     \ })
     endfor
-    return candidates
+    let s:candidates = candidates
 endfunction
 
 function! unite#sources#toilet#define()
