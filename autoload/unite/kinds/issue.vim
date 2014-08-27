@@ -24,7 +24,6 @@ function! s:kind.action_table.edit.func(candidate)
     endif
     echo 'Opening #'.a:candidate.action__number.' with Giedit ...'
     execute 'Giedit '.a:candidate.action__number
-    redraw
 endfunction
 
 let s:kind.action_table.add = {

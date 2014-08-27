@@ -19,12 +19,12 @@ let s:kind.action_table.open = {
 
 function! s:kind.action_table.open.func(candidate)
     if !executable('you-get')
-        echom '想要播放？ 需要 you-get, 你懂的。'.
+        echoerr 'You want to play it directly? You should have you-get installed.'.
         return
     endif
     let g:unite#workflow#player = get(g:, 'unite#workflow#player', 'mplayer')
     if !executable(g:unite#workflow#player)
-        echom '默认使用 mplayer，如需替换，请修改变量: g:unite#workflow#player'
+        echoerr 'No '.g:unite#workflow#player.' in $PATH, you may need to change g:unite#workflow#player.'
     endif
     try
         echo 'opening with '.g:unite#workflow#player
@@ -33,6 +33,17 @@ function! s:kind.action_table.open.func(candidate)
     catch
         echoerr 'Failed to play the selected song.'
     endtry
+endfunction
+
+let s:kind.action_table.stop = {
+            \ 'description' : 'Stop the player.',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:kind.action_table.stop.func(candidate)
+    call system('pkill '.g:unite#workflow#player)
+    call system('pkill you-get')
+    echo 'stopped'
 endfunction
 
 let &cpo = s:save_cpo

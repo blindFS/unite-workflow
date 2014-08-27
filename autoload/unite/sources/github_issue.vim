@@ -95,7 +95,7 @@ function! s:get_current_repo()
     if output == []
         return 'farseer90718/unite-workflow'
     endif
-    return matchstr(output[0], 'github.com[/:]\zs.*\ze\.git')
+    return substitute(matchstr(output[0], 'github.com[/:]\zs[^ ]*'), '\.git$', '', '')
 endfunction
 
 function! s:refresh(repo)
