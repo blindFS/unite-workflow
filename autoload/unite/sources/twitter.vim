@@ -10,6 +10,80 @@ let s:unite_source = {
             \ 'syntax' : 'uniteSource__twitter'
             \ }
 
+let s:unite_source.action_table.tweet = {
+            \ 'description' : 'Create a new tweet.',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.tweet.func(candidate)
+    call s:http_post('new', a:candidate)
+endfunction
+
+let s:unite_source.action_table.reply = {
+            \ 'description' : 'Reply to a tweet.',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.reply.func(candidate)
+    call s:http_post('reply', a:candidate)
+endfunction
+
+let s:unite_source.action_table.retweet = {
+            \ 'description' : 'Retweet.',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.retweet.func(candidate)
+    call s:http_post('retweet', a:candidate)
+endfunction
+
+let s:unite_source.action_table.favorite = {
+            \ 'description' : 'Favorite a tweet.',
+            \ 'is_quit' : 0
+            \ }
+
+function! s:unite_source.action_table.favorite.func(candidate)
+    call s:http_post('favorite', a:candidate)
+endfunction
+
+function! s:http_post(action, candidate)
+    if !exists('s:ctx')
+        return
+    endif
+
+    let api_url = 'https://api.twitter.com/1.1/'
+    let url = api_url.'statuses/update.json'
+    if a:action == 'reply'
+        let param = {
+                    \ 'status' : unite#util#input('text:', '@'.a:candidate.action__user.' '),
+                    \ 'in_reply_to_status_id' : a:candidate.action__id,
+                    \ 'trim_user' : 1
+                    \ }
+    elseif a:action == 'new'
+        let param = {
+                    \ 'status' : unite#util#input('text:', ''),
+                    \ 'trim_user' : 1
+                    \ }
+    elseif a:action == 'retweet'
+        let param = {
+                    \ 'trim_user' : 1
+                    \ }
+        let url = api_url.'statuses/retweet/'.a:candidate.action__id.'.json'
+    elseif a:action == 'favorite'
+        let param = {
+                    \ 'id' : a:candidate.action__id,
+                    \ 'include_entities' : 'false'
+                    \ }
+        let url = api_url.'/favorites/create.json'
+    endif
+
+    let ret = webapi#oauth#post(url, s:ctx, {}, param)
+    if ret.status == '200'
+        redraw
+        echo 'Done!. Press <C-L> to refresh.'
+    endif
+endfunction
+
 function! s:unite_source.hooks.on_init(args, context)
     if exists('s:loaded')
         return
@@ -26,9 +100,13 @@ function! s:unite_source.hooks.on_close(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
-    syntax match uniteSource__twitter_user /.*\ze ::/
+    syntax match uniteSource__twitter_user /.*\ze::/
                 \ contained containedin=uniteSource__twitter
-    highlight default link uniteSource__twitter_user Keyword
+                \ contains=uniteSource__twitter_status
+    syntax match uniteSource__twitter_status /【.\{-}】/
+                \ contained containedin=uniteSource__twitter_user
+    highlight default link uniteSource__twitter_user Constant
+    highlight default link uniteSource__twitter_status Keyword
 endfunction
 
 function! s:unite_source.hooks.on_post_filter(args, context)
@@ -57,7 +135,7 @@ function! s:http_get(number)
     let ctx = {}
     let configfile = g:unite_data_directory.'/twitter/auth.json'
     if filereadable(configfile)
-        let ctx = eval(join(readfile(configfile), ""))
+        let s:ctx = eval(join(readfile(configfile), ""))
     else
         let ctx.consumer_key = '56CsnzxEQVfnyOZxd2Cl2oPnn'
         let ctx.consumer_secret = '5HwtGeeRNP4mPNwjG4fxVNSIL4tFLJxOjRyjVqG3bjZq4H8qq7'
@@ -73,14 +151,16 @@ function! s:http_get(number)
             call system("xdg-open '".auth_url."?oauth_token=".ctx.request_token."'")
         elseif executable('open')
             call system("open '".auth_url."?oauth_token=".ctx.request_token."'")
+        else
+            return []
         endif
         let pin = input("PIN:")
-        let ctx = webapi#oauth#access_token(access_token_url, ctx, {"oauth_verifier": pin})
-        call writefile([string(ctx)], configfile)
+        let s:ctx = webapi#oauth#access_token(access_token_url, ctx, {"oauth_verifier": pin})
+        call writefile([string(s:ctx)], configfile)
     endif
 
     let url = "https://api.twitter.com/1.1/statuses/home_timeline.json"
-    let ret = webapi#oauth#get(url, ctx, {}, {'count' : a:number})
+    let ret = webapi#oauth#get(url, s:ctx, {}, {'count' : a:number})
     let content = webapi#json#decode(ret.content)
     if type(content) != 3
         return []
@@ -89,11 +169,18 @@ function! s:http_get(number)
 endfunction
 
 function! s:extract_entry(dict)
+    let deco = ''
+    let deco .= a:dict.favorited? '★' : '☆'
+    let deco .= a:dict.favorite_count.','
+    let deco .= a:dict.retweeted? '♻' : '♲'
+    let deco .= a:dict.retweet_count
     return {
                 \ 'id' : a:dict.user.id,
                 \ 'icon' : a:dict.user.profile_image_url,
-                \ 'word' : a:dict.user.name.' :: '.a:dict.text,
+                \ 'word' : '【'.deco.'】'.a:dict.user.name.'::'.a:dict.text,
                 \ 'action__uri' : 'https://twitter.com',
+                \ 'action__id' : a:dict.id_str,
+                \ 'action__user' : a:dict.user.screen_name,
                 \ 'kind' : 'uri',
                 \ 'source' : 'twitter'
                 \ }

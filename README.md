@@ -56,9 +56,9 @@ If used with input, the input is taken as subreddit like this:
 
 ### twitter
 
-Twitter timeline.
+Twitter.
 
-TODO: other ops like reply/retweet/create.
+Available actions: tweet/retweet/reply/favorite.
 
 ![tw](./screenshots/twitter.png)
 
