@@ -72,7 +72,7 @@ endfunction
 
 function! unite#sources#gist_search#define()
     if !exists(':Gist')
-        echom "You need to load mattn's gist-vim first"
+        return []
     endif
     return s:unite_source
 endfunction

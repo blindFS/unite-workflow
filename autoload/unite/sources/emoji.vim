@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:dict = expand('<sfile>:p:h').'/emoji.dict'
+let s:dict = expand('<sfile>:p:h').'/../libs/emoji.dict'
 let s:unite_source = {
             \ 'name': 'emoji',
             \ 'description' : 'Search for emoji by description.',

@@ -21,7 +21,7 @@ Search for github repos by keywords.
 
 NOTE:
 
-* In order edit issues or create new issue, you'll need [github-issues.vim](https://github.com/jaxbot/github-issues.vim)
+* In order to edit issues or create new issue, you'll need [github-issues.vim](https://github.com/jaxbot/github-issues.vim)
 * The default repository(if input omitted) is fetched by `git remote -v`.
 * You could use input to specify a certain project, in the format of 'owner/repo'
 
@@ -118,6 +118,9 @@ You need these plugins installed and loaded.
 
 * [unite.vim](https://github.com/shougo/unite.vim)
 * [webapi-vim](https://github.com/mattn/webapi-vim)
+
+Suggested plugins:
+
 * [github-issues.vim](https://github.com/jaxbot/github-issues.vim) for github issue editing/creating.
 * [gist-vim](https://github.com/mattn/gist-vim) for gist sources.
 

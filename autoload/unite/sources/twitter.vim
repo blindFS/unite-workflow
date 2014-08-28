@@ -2,6 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:candidates = []
+let s:dict = expand('<sfile>:p:h').'/../libs/emoji.dict'
 let s:unite_source = {
             \ 'name' : 'twitter',
             \ 'description' : 'twitter timeline.',
@@ -163,18 +164,32 @@ function! s:http_get(number)
 
     let url = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     let ret = webapi#oauth#get(url, s:ctx, {}, {'count' : a:number})
-    let content = webapi#json#decode(ret.content)
+    let content = webapi#json#decode(
+                \ substitute(ret.content,
+                \   '\\u\(d\x\{3}\)\\u\(d\x\{3}\)',
+                \   '\=s:from_surrogates(submatch(1), submatch(2))',
+                \   'g')
+                \ )
     if type(content) != 3
         return []
     endif
     return map(content, 's:extract_entry(v:val)')
 endfunction
 
+function! s:from_surrogates(high, low)
+    let high = str2nr(a:high, 16) - 55296
+    let low = str2nr(a:low, 16) - 56320
+    let code = printf('&#x%04x;', 65536 + 1024*high + low)
+    let lines = readfile(s:dict)
+    call filter(lines, 'v:val =~ "'.code.'"')
+    return len(lines) > 0 ? lines[0][0:4] : ''
+endfunction
+
 function! s:extract_entry(dict)
     let deco = ''
     let deco .= a:dict.favorited? '★' : '☆'
     let deco .= a:dict.favorite_count.','
-    let deco .= a:dict.retweeted? '♻' : '♲'
+    let deco .= a:dict.retweeted? '♻ ' : '♲ '
     let deco .= a:dict.retweet_count
     return {
                 \ 'id' : a:dict.user.id,
