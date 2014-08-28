@@ -23,6 +23,10 @@ function! unite#libs#gh_event#get_event(target, source)
         let api_addr = api_base.'repos/'.a:target.'/'.api_suff
     endif
     let res = webapi#http#get(api_addr)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let events = webapi#json#decode(res.content)
     return map(events, 's:extract_entry(v:val, a:source)')
 endfunction

@@ -65,6 +65,10 @@ endfunction
 
 function! s:http_get(repo)
     let res = webapi#http#get("https://api.github.com/repos/".a:repo.'/issues')
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     if type(content) == 4
         return []

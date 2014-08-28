@@ -1,11 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists(':Gist')
-    echoerr "You need to load mattn's gist-vim first"
-    finish
-endif
-
 let s:candidates = []
 let s:unite_source = {
             \ 'name' : 'gist/search',
@@ -46,6 +41,10 @@ endfunction
 function! s:http_get(input)
     let param = {"q": a:input}
     let res = webapi#http#get('https://gist.github.com/search', param)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let lines = split(res.content, '\n')
     let gists = filter(lines, 'v:val =~ "css-truncate-target"')
     return map(gists, 's:extract_entry(v:val)')
@@ -72,6 +71,9 @@ function! s:refresh(input)
 endfunction
 
 function! unite#sources#gist_search#define()
+    if !exists(':Gist')
+        echom "You need to load mattn's gist-vim first"
+    endif
     return s:unite_source
 endfunction
 

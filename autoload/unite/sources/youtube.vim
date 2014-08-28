@@ -53,6 +53,10 @@ function! s:http_get(input)
                 \ 'q' : a:input
                 \ }
     let res = webapi#http#get('https://www.googleapis.com/youtube/v3/search', param)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     if !has_key(content, 'items')
         return []

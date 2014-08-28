@@ -1,11 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists(':Gist')
-    echoerr "You need to load mattn's gist-vim first"
-    finish
-endif
-
 let s:candidates = []
 let s:unite_source = {
             \ 'name' : 'gist/user',
@@ -52,6 +47,9 @@ function! s:extract_entry(dict)
 endfunction
 
 function! unite#sources#gist_user#define()
+    if !exists(':Gist')
+        echom "You need to load mattn's gist-vim first"
+    endif
     return s:unite_source
 endfunction
 

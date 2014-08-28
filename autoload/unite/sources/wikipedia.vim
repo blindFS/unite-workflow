@@ -41,6 +41,10 @@ function! s:http_get(input)
                 \ 'search' : a:input
                 \ }
     let res = webapi#http#get('http://en.wikipedia.org/w/api.php', param)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     return map(content[1], 's:extract_entry(v:val)')
 endfunction

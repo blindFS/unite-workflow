@@ -14,7 +14,7 @@ let s:unite_source = {
 if executable('apropos')
     let s:command = 'apropos %s'
 else
-    echoerr 'Apropos is not executable on your system.'
+    echom 'Apropos is not executable on your system.'
 endif
 
 let s:unite_source.action_table.execute= {

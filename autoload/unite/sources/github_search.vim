@@ -86,6 +86,10 @@ function! s:http_get(input, number)
                 \ "q": a:input,
                 \ "per_page": a:number }
     let res = webapi#http#get("https://api.github.com/search/repositories", param)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     if !has_key(content, 'items')
         return []

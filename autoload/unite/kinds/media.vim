@@ -20,18 +20,18 @@ let s:kind.action_table.open = {
 
 function! s:kind.action_table.open.func(candidate)
     if !executable('you-get')
-        echoerr 'You want to play it directly? You should have you-get installed.'.
+        echom 'You want to play it directly? You should have you-get installed.'.
         return
     endif
     if !executable(g:unite#workflow#player)
-        echoerr 'No '.g:unite#workflow#player.' in $PATH, you may need to change g:unite#workflow#player.'
+        echom 'No '.g:unite#workflow#player.' in $PATH, you may need to change g:unite#workflow#player.'
     endif
     try
         echo 'opening with '.g:unite#workflow#player
         call system('pkill '.g:unite#workflow#player)
         call system('you-get -p '.g:unite#workflow#player.' '.a:candidate.action__uri.' &')
     catch
-        echoerr 'Failed to play the selected song.'
+        echom 'Failed to play the selected song.'
     endtry
 endfunction
 

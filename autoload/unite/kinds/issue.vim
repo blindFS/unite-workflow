@@ -25,7 +25,7 @@ let s:kind.action_table.add = {
 
 function! s:kind.action_table.add.func(candidate)
     if !exists(':Giadd')
-        echoerr 'You need to load jaxbot/github-issues.vim first.'
+        echom 'You need to load jaxbot/github-issues.vim first.'
         return
     endif
     Giadd
@@ -37,7 +37,7 @@ function! unite#kinds#issue#edit(candidate)
         return
     endif
     if !exists(':Giedit')
-        echoerr 'You need to load jaxbot/github-issues.vim first.'
+        echom 'You need to load jaxbot/github-issues.vim first.'
         return
     endif
     echo 'Opening #'.number.' with Giedit ...'

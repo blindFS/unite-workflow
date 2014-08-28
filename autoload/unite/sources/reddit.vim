@@ -43,6 +43,10 @@ endfunction
 
 function! s:http_get(url)
     let res = webapi#http#get(a:url)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     return map(content.data.children, 's:extract_entry(v:val)')
 endfunction

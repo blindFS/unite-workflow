@@ -81,6 +81,8 @@ function! s:http_post(action, candidate)
     if ret.status == '200'
         redraw
         echo 'Done!. Press <C-L> to refresh.'
+    else
+        echom 'http error code:'.ret.status
     endif
 endfunction
 

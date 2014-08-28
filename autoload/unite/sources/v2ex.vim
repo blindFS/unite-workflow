@@ -70,6 +70,10 @@ endfunction
 
 function! s:http_get()
     let res = webapi#http#get('http://v2ex.com/api/topics/latest.json')
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     return map(content, 's:extract_entry(v:val)')
 endfunction

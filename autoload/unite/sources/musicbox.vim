@@ -61,6 +61,10 @@ function! s:http_get(input)
                 \ }
 
     let res = webapi#http#post(s:url_pre.'api/search/get', param, header)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     if !has_key(content, 'result') || !has_key(content.result, 'songs')
         return []

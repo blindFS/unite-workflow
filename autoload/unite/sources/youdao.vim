@@ -59,6 +59,10 @@ function! s:http_get(input)
                 \ 'version' : '1.1'
                 \ }
     let res = webapi#http#get('http://fanyi.youdao.com/openapi.do', param)
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
     let content = webapi#json#decode(res.content)
     return [s:extract_entry(content)]
 endfunction
