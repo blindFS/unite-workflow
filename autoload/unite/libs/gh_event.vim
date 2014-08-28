@@ -88,6 +88,7 @@ function! s:extract_entry(dict, source)
                 \ 'id' : a:dict.actor.id,
                 \ 'icon' : a:dict.actor.avatar_url,
                 \ 'action__uri' : url,
+                \ 'action__repo' : repo,
                 \ 'word' : words.s:date_diff(a:dict.created_at),
                 \ 'kind' : 'uri',
                 \ 'source' : 'github/'.a:source

@@ -15,9 +15,9 @@ function! s:unite_source.hooks.on_init(args, context)
         return
     endif
     let input = get(a:args, 0, '')
-    let repo = input != '' ? input :
+    let s:repo = input != '' ? input :
                 \ s:get_current_repo()
-    call s:refresh(repo)
+    call s:refresh(s:repo)
     let s:loaded = 1
 endfunction
 
@@ -49,8 +49,8 @@ endfunction
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
         if a:context.input != ''
-            let repo = a:context.input
-            call s:refresh(repo)
+            let s:repo = a:context.input
+            call s:refresh(s:repo)
         endif
     endif
     return s:candidates
@@ -82,7 +82,7 @@ function! s:extract_entry(dict)
                 \ 'icon' : a:dict.user.avatar_url,
                 \ 'word' : user.' -- '.title.'  '.labels,
                 \ 'action__uri' : a:dict.html_url,
-                \ 'action__number' : a:dict.number,
+                \ 'action__repo' : s:repo,
                 \ 'kind' : 'issue',
                 \ 'source' : 'github/issue'
                 \ }

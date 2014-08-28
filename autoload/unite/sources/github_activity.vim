@@ -6,16 +6,23 @@ let s:candidates = []
 function! unite#sources#github_activity#define()
     let sources = []
     for source in ['feed', 'event']
-        let s:unite_source = {
+        let so = {
                     \ 'name' : 'github/'.source,
                     \ 'description' : 'Github '.source.'s of a certain user.',
                     \ 'hooks' : {
                     \   'on_syntax' : function('unite#libs#gh_event#on_syntax')
                     \ },
+                    \ 'action_table' : {},
                     \ 'syntax' : 'uniteSource__github_event'
                     \ }
 
-        function! s:unite_source.hooks.on_init(args, context)
+        let so.action_table.edit = {
+                    \ 'description' : 'Edit with :Giedit.',
+                    \ 'is_quit' : 1,
+                    \ 'func' : function('unite#kinds#issue#edit')
+                    \ }
+
+        function! so.hooks.on_init(args, context)
             if exists('s:loaded')
                 return
             endif
@@ -24,14 +31,14 @@ function! unite#sources#github_activity#define()
             let s:loaded = 1
         endfunction
 
-        function! s:unite_source.hooks.on_close(args, context)
+        function! so.hooks.on_close(args, context)
             call unite#libs#uri#clear_sign()
             if exists('s:loaded')
                 unlet s:loaded
             endif
         endfunction
 
-        function! s:unite_source.hooks.on_post_filter(args, context)
+        function! so.hooks.on_post_filter(args, context)
             let s:context = a:context
             augroup workflow_icon
                 autocmd! TextChanged,TextChangedI <buffer>
@@ -39,7 +46,7 @@ function! unite#sources#github_activity#define()
             augroup END
         endfunction
 
-        function! s:unite_source.gather_candidates(args, context)
+        function! so.gather_candidates(args, context)
             if a:context.is_redraw
                 let s:kind = split(a:context.source.name, '/')[1]
                 call s:refresh(a:args)
@@ -48,14 +55,14 @@ function! unite#sources#github_activity#define()
             return s:candidates
         endfunction
 
-        function! s:unite_source.async_gather_candidates(args, context)
+        function! so.async_gather_candidates(args, context)
             if unite#libs#uri#show_icon(1, a:context, s:candidates)
                 let a:context.is_async = 0
             endif
             return []
         endfunction
 
-        call add(sources, s:unite_source)
+        call add(sources, so)
     endfor
 
     return sources
