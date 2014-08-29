@@ -29,21 +29,14 @@ function! s:unite_source.action_table.clone.func(candidate)
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
-    if exists('s:loaded')
-        return
-    endif
     let input = get(a:args, 0, '')
     let input = input != '' ? input :
                 \ unite#util#input('Please input search words: ', '')
     call s:refresh(input, a:context.winheight)
-    let s:loaded = 1
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
     call unite#libs#uri#clear_sign()
-    if exists('s:loaded')
-        unlet s:loaded
-    endif
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)

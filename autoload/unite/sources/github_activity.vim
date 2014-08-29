@@ -23,19 +23,12 @@ function! unite#sources#github_activity#define()
                     \ }
 
         function! so.hooks.on_init(args, context)
-            if exists('s:loaded')
-                return
-            endif
             let s:kind = split(a:context.source.name, '/')[1]
             call s:refresh(a:args)
-            let s:loaded = 1
         endfunction
 
         function! so.hooks.on_close(args, context)
             call unite#libs#uri#clear_sign()
-            if exists('s:loaded')
-                unlet s:loaded
-            endif
         endfunction
 
         function! so.hooks.on_post_filter(args, context)

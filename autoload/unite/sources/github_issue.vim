@@ -11,21 +11,14 @@ let s:unite_source = {
             \ }
 
 function! s:unite_source.hooks.on_init(args, context)
-    if exists('s:loaded')
-        return
-    endif
     let input = get(a:args, 0, '')
     let s:repo = input != '' ? input :
                 \ s:get_current_repo()
     call s:refresh(s:repo)
-    let s:loaded = 1
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
     call unite#libs#uri#clear_sign()
-    if exists('s:loaded')
-        unlet s:loaded
-    endif
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)

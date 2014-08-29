@@ -15,18 +15,11 @@ function! unite#sources#v2ex#define()
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
-    if exists('s:loaded')
-        return
-    endif
     call s:refresh()
-    let s:loaded = 1
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
     call unite#libs#uri#clear_sign()
-    if exists('s:loaded')
-        unlet s:loaded
-    endif
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)

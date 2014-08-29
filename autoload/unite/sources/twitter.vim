@@ -88,18 +88,11 @@ function! s:http_post(action, candidate)
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
-    if exists('s:loaded')
-        return
-    endif
     call s:refresh(a:context.winheight)
-    let s:loaded = 1
 endfunction
 
 function! s:unite_source.hooks.on_close(args, context)
     call unite#libs#uri#clear_sign()
-    if exists('s:loaded')
-        unlet s:loaded
-    endif
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
