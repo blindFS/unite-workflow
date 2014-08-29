@@ -187,15 +187,18 @@ endfunction
 
 function! s:extract_entry(dict)
     let deco = ''
-    let deco .= a:dict.favorited? '★' : '☆'
+    let deco .= a:dict.favorited? '★ ' : '☆ '
     let deco .= a:dict.favorite_count.','
     let deco .= a:dict.retweeted? '♻ ' : '♲ '
     let deco .= a:dict.retweet_count
+    let url = matchstr(a:dict.text, '[a-z]*:\/\/[^ >,;]*')
+    let url = url == '' ? 'https://twitter.com' : url
+    let text = substitute(a:dict.text, '[a-z]*:\/\/[^ >,;]*', '🔗', 'g')
     return {
                 \ 'id' : a:dict.user.id,
                 \ 'icon' : a:dict.user.profile_image_url,
-                \ 'word' : '【'.deco.'】'.a:dict.user.name.'::'.a:dict.text,
-                \ 'action__uri' : 'https://twitter.com',
+                \ 'word' : '【'.deco.'】'.a:dict.user.name.'::'.text,
+                \ 'action__uri' : url,
                 \ 'action__id' : a:dict.id_str,
                 \ 'action__user' : a:dict.user.screen_name,
                 \ 'kind' : 'uri',
