@@ -112,6 +112,12 @@ Latest topics of http://www.v2ex.com
 
 ![163](./screenshots/musicbox.png)
 
+### douban
+
+豆瓣 音乐/电影/图书
+
+![db](./screenshots/douban.png)
+
 ## Installation
 
 You need these plugins installed and loaded.
