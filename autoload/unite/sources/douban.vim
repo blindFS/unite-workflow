@@ -52,6 +52,7 @@ function! unite#sources#douban#define()
                 if a:context.input != ''
                     let input = a:context.input
                     call s:refresh(input)
+                    let a:context.is_async = 1
                 endif
             endif
             return s:candidates

@@ -44,6 +44,7 @@ function! s:unite_source.gather_candidates(args, context)
         if a:context.input != ''
             let s:repo = a:context.input
             call s:refresh(s:repo)
+            let a:context.is_async = 1
         endif
     endif
     return s:candidates

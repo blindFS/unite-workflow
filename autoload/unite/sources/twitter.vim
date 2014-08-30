@@ -116,6 +116,7 @@ endfunction
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
         call s:refresh(a:context.winheight)
+        let a:context.is_async = 1
     endif
     return s:candidates
 endfunction

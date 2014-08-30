@@ -62,6 +62,7 @@ function! s:unite_source.gather_candidates(args, context)
         if a:context.input != ''
             let input = a:context.input
             call s:refresh(input, a:context.winheight)
+            let a:context.is_async = 1
         endif
     endif
     return s:candidates
