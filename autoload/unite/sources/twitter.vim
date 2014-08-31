@@ -25,6 +25,16 @@ let s:unite_source.action_table.reply = {
             \ 'is_quit' : 0
             \ }
 
+let s:unite_source.action_table.user = {
+            \ 'description' : 'Tweets from the same user.'
+            \ }
+
+function! s:unite_source.action_table.user.func(candidate)
+    let context = unite#get_context()
+    let context.input = ''
+    call unite#start([['twitter', a:candidate.action__user]], context)
+endfunction
+
 function! s:unite_source.action_table.reply.func(candidate)
     call s:http_post('reply', a:candidate)
 endfunction
@@ -88,6 +98,7 @@ function! s:http_post(action, candidate)
 endfunction
 
 function! s:unite_source.hooks.on_init(args, context)
+    let s:input = get(a:args, 0, '')
     call s:refresh(a:context.winheight)
 endfunction
 
@@ -115,6 +126,7 @@ endfunction
 
 function! s:unite_source.gather_candidates(args, context)
     if a:context.is_redraw
+        let s:input = get(a:args, 0, '')
         call s:refresh(a:context.winheight)
         let a:context.is_async = 1
     endif
@@ -122,6 +134,9 @@ function! s:unite_source.gather_candidates(args, context)
 endfunction
 
 function! s:unite_source.async_gather_candidates(args, context)
+    if bufname('%') != 'default' && bufname('%') != ''
+        let a:context.buffer_name = bufname('%')
+    endif
     if unite#libs#uri#show_icon(1, a:context, s:candidates)
         let a:context.is_async = 0
     endif
@@ -156,8 +171,17 @@ function! s:http_get(number)
         call writefile([string(s:ctx)], configfile)
     endif
 
-    let url = "https://api.twitter.com/1.1/statuses/home_timeline.json"
-    let ret = webapi#oauth#get(url, s:ctx, {}, {'count' : a:number})
+    let url_pre = 'https://api.twitter.com/1.1/statuses/'
+    let param = {
+                \ 'count' : a:number
+                \ }
+    if s:input == ''
+        let url = url_pre.'home_timeline.json'
+    else
+        let url = url_pre.'user_timeline.json'
+        let param.screen_name = s:input
+    endif
+    let ret = webapi#oauth#get(url, s:ctx, {}, param)
     let content = webapi#json#decode(
                 \ substitute(ret.content,
                 \   '\\u\(d\x\{3}\)\\u\(d\x\{3}\)',
