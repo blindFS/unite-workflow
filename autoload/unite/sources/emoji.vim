@@ -12,6 +12,16 @@ let s:unite_source = {
             \ 'syntax' : 'uniteSource__emoji'
             \ }
 
+let s:unite_source.action_table.insert = {
+            \ 'description' : 'insert emoji',
+            \ 'is_quit' : 1
+            \ }
+
+function! s:unite_source.action_table.insert.func(candidate)
+    let word = matchstr(a:candidate.word, '^.\{-}\ze\s')
+    call unite#kinds#common#insert_word(word)
+endfunction
+
 function! s:unite_source.hooks.on_syntax(args, context)
     syntax match uniteSource__emoji_code /&.*;/
                 \ contained containedin=uniteSource__emoji

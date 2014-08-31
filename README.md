@@ -118,6 +118,10 @@ Latest topics of http://www.v2ex.com
 
 ![db](./screenshots/douban.png)
 
+### zhihu
+
+知乎日报
+
 ## Installation
 
 You need these plugins installed and loaded.

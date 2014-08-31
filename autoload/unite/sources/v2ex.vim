@@ -6,7 +6,6 @@ let s:unite_source = {
             \ 'name' : 'v2ex',
             \ 'description' : 'Latest topics from http://www.v2ex.com',
             \ 'hooks' : {},
-            \ 'action_table': {},
             \ 'syntax' : 'uniteSource__v2ex'
             \ }
 

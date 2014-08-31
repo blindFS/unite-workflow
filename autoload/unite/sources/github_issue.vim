@@ -6,7 +6,6 @@ let s:unite_source = {
             \ 'name' : 'github/issue',
             \ 'description' : 'List github issues of a certain repository.',
             \ 'hooks' : {},
-            \ 'action_table': {},
             \ 'syntax' : 'uniteSource__ghissue'
             \ }
 
