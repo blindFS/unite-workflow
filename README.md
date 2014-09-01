@@ -122,6 +122,10 @@ Latest topics of http://www.v2ex.com
 
 知乎日报
 
+### turing
+
+[图灵机器人](http://www.tuling123.com/openapi/cloud/home.jsp)
+
 ## Installation
 
 You need these plugins installed and loaded.
