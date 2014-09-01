@@ -23,8 +23,7 @@ function! s:unite_source.hooks.on_init(args, context)
     let input = get(a:args, 0, '')
     let input = input != '' ? input :
                 \ unite#util#input('Conversation: ', '')
-    let s:input = input == '' ? 'Invalid input' : input
-    call s:refresh(s:input)
+    call s:refresh(input)
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
@@ -42,20 +41,29 @@ function! s:http_get(input)
         return []
     endif
     let content = webapi#json#decode(res.content)
-    return [s:extract_entry(content)]
+    if has_key(content, 'list')
+        return map(content.list, 's:extract_entry(v:val)')
+    endif
+    return [{
+                \ 'word' : content.text,
+                \ 'kind' : 'word',
+                \ 'is_multiline' : 1,
+                \ 'source' : 'turing'
+                \ }]
 endfunction
 
 function! s:extract_entry(dict)
     return {
-                \ 'word' : a:dict.text,
-                \ 'kind' : 'word',
-                \ 'is_multiline' : 1,
-                \ 'source' : 'turing'}
+                \ 'word' : get(a:dict, 'article', 'unknown'),
+                \ 'kind' : 'uri',
+                \ 'action__uri' : get(a:dict, 'detailurl', 'http://www.tuling123.com'),
+                \ 'source' : 'turing'
+                \ }
 endfunction
 
 function! s:refresh(input)
     call unite#print_source_message('Getting response ...', 'turing')
-    let s:candidates = s:http_get(s:input)
+    let s:candidates = s:http_get(a:input)
     call unite#clear_message()
 endfunction
 
