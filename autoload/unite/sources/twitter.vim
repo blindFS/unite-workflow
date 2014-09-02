@@ -145,29 +145,34 @@ endfunction
 
 function! s:http_get(number)
     let ctx = {}
-    let configfile = g:unite_data_directory.'/twitter/auth.json'
+    let config_dir = unite#get_data_directory().'/twitter'
+    if !isdirectory(config_dir)
+        call mkdir(config_dir, 'p')
+    endif
+    let configfile = config_dir.'/auth.json'
     if filereadable(configfile)
         let s:ctx = eval(join(readfile(configfile), ""))
     else
         let ctx.consumer_key = '56CsnzxEQVfnyOZxd2Cl2oPnn'
         let ctx.consumer_secret = '5HwtGeeRNP4mPNwjG4fxVNSIL4tFLJxOjRyjVqG3bjZq4H8qq7'
 
-        let request_token_url = "https://twitter.com/oauth/request_token"
-        let auth_url =  "https://twitter.com/oauth/authorize"
-        let access_token_url = "https://api.twitter.com/oauth/access_token"
+        let request_token_url = 'https://twitter.com/oauth/request_token'
+        let auth_url =  'https://twitter.com/oauth/authorize'
+        let access_token_url = 'https://api.twitter.com/oauth/access_token'
 
         let ctx = webapi#oauth#request_token(request_token_url, ctx)
-        if has("win32") || has("win64")
-            exe "!start rundll32 url.dll,FileProtocolHandler ".auth_url."?oauth_token=".ctx.request_token
+        let redir_url = auth_url.'?oauth_token='.ctx.request_token
+        if has('win32') || has('win64')
+            exe '!start rundll32 url.dll,FileProtocolHandler '.redir_url
         elseif executable('xdg-open')
-            call system("xdg-open '".auth_url."?oauth_token=".ctx.request_token."'")
+            call system("xdg-open '".redir_url."'")
         elseif executable('open')
-            call system("open '".auth_url."?oauth_token=".ctx.request_token."'")
+            call system("open '".redir_url."'")
         else
             return []
         endif
-        let pin = input("PIN:")
-        let s:ctx = webapi#oauth#access_token(access_token_url, ctx, {"oauth_verifier": pin})
+        let pin = input('PIN:')
+        let s:ctx = webapi#oauth#access_token(access_token_url, ctx, {'oauth_verifier': pin})
         call writefile([string(s:ctx)], configfile)
     endif
 
