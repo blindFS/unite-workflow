@@ -62,6 +62,10 @@ Available actions: tweet/retweet/reply/favorite.
 
 ![tw](./screenshots/twitter.png)
 
+### dropbox
+
+![db](./screenshots/dropbox.png)
+
 ### wikipedia
 
 Search for wiki, list matching entries, open selected in a browser.
