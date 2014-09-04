@@ -64,6 +64,9 @@ Available actions: tweet/retweet/reply/favorite.
 
 ### dropbox
 
+* files/directories hierarchy list
+* search
+
 ![db](./screenshots/dropbox.png)
 
 ### wikipedia

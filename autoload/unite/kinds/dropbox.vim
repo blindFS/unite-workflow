@@ -19,7 +19,7 @@ let s:kind.action_table.start = {
 
 function! s:kind.action_table.start.func(candidate)
     if a:candidate.action__mime == 'dir'
-        call unite#start([['dropbox', a:candidate.action__path]])
+        call unite#start([['dropbox/files', a:candidate.action__path]])
         return
     endif
     if a:candidate.action__mime =~ 'text'
@@ -100,10 +100,22 @@ function! unite#kinds#dropbox#list_path(path)
     if !has_key(content, 'contents')
         return []
     endif
-    return map(content.contents, 'unite#kinds#dropbox#extract_entry(v:val)')
+    return map(content.contents, 's:extract_entry(v:val)')
 endfunction
 
-function! unite#kinds#dropbox#extract_entry(dict)
+function! unite#kinds#dropbox#search(keywords)
+    let ctx = unite#kinds#dropbox#authorize()
+    let url = 'https://api.dropbox.com/1/search/auto'
+    let res = webapi#oauth#get(url, ctx, {}, {'query' : a:keywords})
+    if res.status != '200'
+        echom 'http error code:'.res.status
+        return []
+    endif
+    let content = webapi#json#decode(res.content)
+    return map(content, 's:extract_entry(v:val)')
+endfunction
+
+function! s:extract_entry(dict)
     let mime = get(a:dict, 'mime_type', 'dir')
     return {
                 \ 'word' : '【'.mime.'】'.
