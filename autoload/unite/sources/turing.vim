@@ -44,12 +44,18 @@ function! s:http_get(input)
     if has_key(content, 'list')
         return map(content.list, 's:extract_entry(v:val)')
     endif
-    return [{
+    let result = {
                 \ 'word' : content.text,
                 \ 'kind' : 'word',
                 \ 'is_multiline' : 1,
                 \ 'source' : 'turing'
-                \ }]
+                \ }
+    if has_key(content, 'url')
+        let result.word .= ' 🔗 '
+        let result.kind = 'uri'
+        let result.action__uri = content.url
+    endif
+    return [result]
 endfunction
 
 function! s:extract_entry(dict)
