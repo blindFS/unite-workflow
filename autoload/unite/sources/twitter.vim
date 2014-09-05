@@ -30,9 +30,7 @@ let s:unite_source.action_table.user = {
             \ }
 
 function! s:unite_source.action_table.user.func(candidate)
-    let context = unite#get_context()
-    let context.input = ''
-    call unite#start([['twitter', a:candidate.action__user]], context)
+    call unite#start([['twitter', a:candidate.action__user]])
 endfunction
 
 function! s:unite_source.action_table.reply.func(candidate)
@@ -134,9 +132,6 @@ function! s:unite_source.gather_candidates(args, context)
 endfunction
 
 function! s:unite_source.async_gather_candidates(args, context)
-    if bufname('%') != 'default' && bufname('%') != ''
-        let a:context.buffer_name = bufname('%')
-    endif
     if unite#libs#uri#show_icon(1, a:context, s:candidates)
         let a:context.is_async = 0
     endif
