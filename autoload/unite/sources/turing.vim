@@ -60,7 +60,7 @@ endfunction
 
 function! s:extract_entry(dict)
     return {
-                \ 'word' : get(a:dict, 'article', 'unknown'),
+                \ 'word' : get(a:dict, 'article', get(a:dict, 'name', 'unknown')),
                 \ 'kind' : 'uri',
                 \ 'action__uri' : get(a:dict, 'detailurl', 'http://www.tuling123.com'),
                 \ 'source' : 'turing'
