@@ -74,7 +74,7 @@ function! s:extract_entry(dict, source)
     elseif a:dict.type == 'MemberEvent'
         let words = user.' --- '.
                     \ a:dict.payload.action . ' '.
-                    \ a:dict.payload.member . ' to '.repo
+                    \ a:dict.payload.member.login . ' to '.repo
         let url = html_pre.repo
     elseif a:dict.type == 'PublicEvent'
         let words = user.' --- opened '.repo
