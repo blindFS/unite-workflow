@@ -2,6 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:signs = {}
+let s:procs = {}
 function! unite#libs#uri#show_icon(download, context, candidates)
     if !executable('wget') || !has('gui_running') ||
                 \ !unite#util#has_vimproc() || !g:unite#workflow#show_icon
@@ -27,7 +28,8 @@ function! unite#libs#uri#show_icon(download, context, candidates)
                     \ (index+prompt+1)
         if !filereadable(icon) && a:download
             let finished = 0
-            call vimproc#popen2('wget ' . cand.icon . ' -O '.icon)
+            let proc = vimproc#popen2('wget ' . cand.icon . ' -O '.icon)
+            let s:procs[proc.pid] = proc
         else
             if a:download
                 let s:signs[cand.id] = 1
@@ -47,6 +49,9 @@ function! unite#libs#uri#show_icon(download, context, candidates)
             autocmd!
         augroup END
     endif
+    if finished
+        call unite#libs#uri#wait4children()
+    endif
     return finished
 endfunction
 
@@ -57,6 +62,12 @@ function! unite#libs#uri#clear_sign()
             execute 'sign undefine workflow_'.id
         catch
         endtry
+    endfor
+endfunction
+
+function! unite#libs#uri#wait4children()
+    for pid in keys(s:procs)
+        call s:procs[pid].waitpid()
     endfor
 endfunction
 
