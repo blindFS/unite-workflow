@@ -12,7 +12,7 @@ function! unite#libs#uri#show_icon(download, context, candidates)
     if finddir(dir) == ''
         call mkdir(dir, 'p')
     endif
-    let bufn = bufnr(a:context.buffer_name)
+    let bufn = bufnr('[unite] - '.a:context.buffer_name)
     if bufwinnr(a:context.buffer_name) == -1
         return 0
     endif
