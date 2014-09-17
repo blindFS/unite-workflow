@@ -75,8 +75,8 @@ function! s:extract_entry(dict)
     let labels = join(map(a:dict.labels, 'v:val.name'), ', ')
     let labels = labels == '' ? '' : '【'.labels.'】'
     return {
-                \ 'id' : a:dict.user.id,
-                \ 'icon' : a:dict.user.avatar_url,
+                \ 'action__id' : a:dict.user.id,
+                \ 'action__icon' : a:dict.user.avatar_url,
                 \ 'word' : user.' -- '.title.'  '.labels,
                 \ 'action__uri' : a:dict.html_url,
                 \ 'action__repo' : s:repo,

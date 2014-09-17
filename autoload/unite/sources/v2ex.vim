@@ -74,8 +74,8 @@ function! s:extract_entry(dict)
     let icon_raw = a:dict.member.avatar_mini
     let icon_url = icon_raw =~ '^\/\/' ? '"http:'.icon_raw.'"' : '"'.icon_raw.'"'
     return {
-                \ 'id' : a:dict.member.id,
-                \ 'icon' : icon_url,
+                \ 'action__id' : a:dict.member.id,
+                \ 'action__icon' : icon_url,
                 \ 'action__uri' : a:dict.url,
                 \ 'node' : a:dict.node.id,
                 \ 'word' : a:dict.node.title.' ---- '.a:dict.title,

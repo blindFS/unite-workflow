@@ -65,7 +65,7 @@ function! s:http_post(action, candidate)
     if a:action == 'reply'
         let param = {
                     \ 'status' : unite#util#input('text:', '@'.a:candidate.action__user.' '),
-                    \ 'in_reply_to_status_id' : a:candidate.action__id,
+                    \ 'in_reply_to_status_id' : a:candidate.action__uid,
                     \ 'trim_user' : 1
                     \ }
     elseif a:action == 'new'
@@ -77,10 +77,10 @@ function! s:http_post(action, candidate)
         let param = {
                     \ 'trim_user' : 1
                     \ }
-        let url = api_url.'statuses/retweet/'.a:candidate.action__id.'.json'
+        let url = api_url.'statuses/retweet/'.a:candidate.action__uid.'.json'
     elseif a:action == 'favorite'
         let param = {
-                    \ 'id' : a:candidate.action__id,
+                    \ 'id' : a:candidate.action__uid,
                     \ 'include_entities' : 'false'
                     \ }
         let url = api_url.'/favorites/create.json'
@@ -213,11 +213,11 @@ function! s:extract_entry(dict)
     let url = url == '' ? 'https://twitter.com' : url
     let text = substitute(a:dict.text, '[a-z]*:\/\/[^ >,;]*', '🔗', 'g')
     return {
-                \ 'id' : a:dict.user.id,
-                \ 'icon' : a:dict.user.profile_image_url,
+                \ 'action__id' : a:dict.user.id,
+                \ 'action__icon' : a:dict.user.profile_image_url,
                 \ 'word' : '【'.deco.'】'.a:dict.user.name.'::'.text,
                 \ 'action__uri' : url,
-                \ 'action__id' : a:dict.id_str,
+                \ 'action__uid' : a:dict.id_str,
                 \ 'action__user' : a:dict.user.screen_name,
                 \ 'kind' : 'uri',
                 \ 'source' : 'twitter'

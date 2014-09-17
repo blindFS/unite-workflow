@@ -107,8 +107,9 @@ endfunction
 function! s:extract_entry(dict, input)
     let dict = a:input == '' ? a:dict.subject : a:dict
     let icon = s:kind == 'music' ? dict.image : dict.images.small
-    let result = {'id' : dict.id,
-                \ 'icon' : icon,
+    let result = {
+                \ 'action__id' : dict.id,
+                \ 'action__icon' : icon,
                 \ 'kind' : 'uri',
                 \ 'source' : 'douban/'.s:kind,
                 \ 'action__uri' : dict.alt

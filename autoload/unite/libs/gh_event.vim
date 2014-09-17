@@ -89,8 +89,8 @@ function! s:extract_entry(dict, source)
         let url = html_pre
     endif
     return {
-                \ 'id' : a:dict.actor.id,
-                \ 'icon' : a:dict.actor.avatar_url,
+                \ 'action__id' : a:dict.actor.id,
+                \ 'action__icon' : a:dict.actor.avatar_url,
                 \ 'action__uri' : url,
                 \ 'action__repo' : repo,
                 \ 'word' : words.s:date_diff(a:dict.created_at),

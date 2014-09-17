@@ -28,7 +28,7 @@ function! s:extract_entry(dict)
     let fname = keys(a:dict.files)[0]
     let id = a:dict.id
     return {
-                \ 'id' : id,
+                \ 'action__id' : id,
                 \ 'action__uri' : a:dict.html_url,
                 \ 'word' : s:username.'/'.id.'	'.fname,
                 \ 'kind' : 'gist',

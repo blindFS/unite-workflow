@@ -22,22 +22,22 @@ function! unite#libs#uri#show_icon(download, context, candidates)
     let prompt = getline(1) =~ '^[\t ]*'.a:context.prompt
     for index in range(len(a:candidates))
         let cand = a:candidates[index]
-        let icon = dir. cand.id . '.png'
+        let icon = dir. cand.action__id . '.png'
         let line = a:context.direction =~ '^b' ?
                     \ (len(a:candidates) - index) :
                     \ (index+prompt+1)
         if !filereadable(icon) && a:download
             let finished = 0
-            let proc = vimproc#popen2('wget ' . cand.icon . ' -O '.icon)
+            let proc = vimproc#popen2('wget ' . cand.action__icon . ' -O '.icon)
             let s:procs[proc.pid] = proc
         else
             if a:download
-                let s:signs[cand.id] = 1
+                let s:signs[cand.action__id] = 1
             endif
             try
-                execute 'sign define workflow_' . cand.id . ' icon='.icon
+                execute 'sign define workflow_' . cand.action__id . ' icon='.icon
                 execute 'sign place ' . (index+10) . ' line='.line.' name=workflow_'
-                            \ . cand.id . ' buffer=' . bufn
+                            \ . cand.action__id . ' buffer=' . bufn
             catch
                 let finished = 0
             endtry

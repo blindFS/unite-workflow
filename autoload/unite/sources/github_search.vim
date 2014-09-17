@@ -93,8 +93,8 @@ endfunction
 
 function! s:extract_entry(dict)
     return {
-                \ 'id' : a:dict.owner.id,
-                \ 'icon' : a:dict.owner.avatar_url,
+                \ 'action__id' : a:dict.owner.id,
+                \ 'action__icon' : a:dict.owner.avatar_url,
                 \ 'word' : a:dict.full_name,
                 \ 'action__uri' : a:dict.html_url,
                 \ 'kind' : 'uri',

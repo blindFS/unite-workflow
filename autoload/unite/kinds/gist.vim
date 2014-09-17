@@ -19,7 +19,7 @@ let s:kind.action_table.edit = {
 
 function! s:kind.action_table.edit.func(candidates)
     for candidate in a:candidates
-        execute 'Gist '.candidate.id
+        execute 'Gist '.candidate.action__id
     endfor
 endfunction
 

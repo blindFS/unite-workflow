@@ -45,7 +45,7 @@ function! s:extract_entry(line)
     let id = split(uri, '/')[1]
     let filename = matchstr(a:line, 'class="css-truncate-target">\zs[^<]\+\ze<')
     return {
-                \ 'id' : id,
+                \ 'action__id' : id,
                 \ 'action__uri' : 'https://gist.github.com/'.uri,
                 \ 'fname' : filename,
                 \ 'word' : uri.'	'.filename,
