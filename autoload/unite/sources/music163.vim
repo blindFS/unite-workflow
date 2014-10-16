@@ -4,10 +4,10 @@ set cpo&vim
 let s:candidates = []
 let s:url_pre = 'http://music.163.com/'
 let s:unite_source = {
-            \ 'name' : 'musicbox',
-            \ 'description' : '网易音乐盒子搜索',
+            \ 'name' : 'music163',
+            \ 'description' : '网易云音乐搜索',
             \ 'hooks' : {},
-            \ 'syntax' : 'uniteSource__musicbox'
+            \ 'syntax' : 'uniteSource__music163'
             \ }
 
 function! s:unite_source.hooks.on_init(args, context)
@@ -18,13 +18,13 @@ function! s:unite_source.hooks.on_init(args, context)
 endfunction
 
 function! s:unite_source.hooks.on_syntax(args, context)
-    syntax match uniteSource__musicbox_artists /.*\ze\s\+--/
-                \ contained containedin=uniteSource__musicbox
-    syntax match uniteSource__musicbox_album /【.\{-}】/
-                \ contained containedin=uniteSource__musicbox
-                \ contained containedin=uniteSource__musicbox
-    highlight default link uniteSource__musicbox_artists Constant
-    highlight default link uniteSource__musicbox_album String
+    syntax match uniteSource__music163_artists /.*\ze\s\+--/
+                \ contained containedin=uniteSource__music163
+    syntax match uniteSource__music163_album /【.\{-}】/
+                \ contained containedin=uniteSource__music163
+                \ contained containedin=uniteSource__music163
+    highlight default link uniteSource__music163_artists Constant
+    highlight default link uniteSource__music163_album String
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
@@ -69,16 +69,16 @@ function! s:extract_entry(dict)
                 \ 'word' : artists.' -- 【'.album.'】     '.a:dict.name,
                 \ 'action__uri' : s:url_pre.'#/song?id='.a:dict.id,
                 \ 'kind' : 'media',
-                \ 'source' : 'musicbox'}
+                \ 'source' : 'music163'}
 endfunction
 
 function! s:refresh(input)
-    call unite#print_source_message('Searching ...', 'musicbox')
+    call unite#print_source_message('Searching ...', 'music163')
     let s:candidates = s:http_get(a:input)
     call unite#clear_message()
 endfunction
 
-function! unite#sources#musicbox#define()
+function! unite#sources#music163#define()
     return s:unite_source
 endfunction
 
