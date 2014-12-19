@@ -39,7 +39,7 @@ endfunction
 function! s:extract_entry(dict)
     return {
                 \ 'word' : a:dict.title,
-                \ 'action__uri' : a:dict.share_url,
+                \ 'action__uri' : 'http://daily.zhihu.com/story/'.a:dict.id,
                 \ 'kind' : 'uri',
                 \ 'source' : 'zhihu'
                 \ }
