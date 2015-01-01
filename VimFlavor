@@ -1,2 +1,3 @@
 flavor 'mattn/webapi-vim'
 flavor 'mattn/gist-vim'
+flavor 'farseer90718/unite.vim', '~> 6.1'

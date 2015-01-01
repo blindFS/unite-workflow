@@ -1,3 +1,5 @@
+![ci](https://travis-ci.org/farseer90718/unite-workflow.svg)
+
 ## What the hell?
 
 I suppose you know what alfred-workflow is.
