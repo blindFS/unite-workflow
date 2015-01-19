@@ -26,9 +26,8 @@ endfunction
 function! unite#kinds#gist#on_syntax(args, context)
     syntax match uniteSource__gist_user /.*\ze\//
                 \ contained containedin=uniteSource__gist
-    syntax match uniteSource__gist_fname /[ \t]\+.*$/
+    syntax match uniteSource__gist_fname /\S\+\s\+\zs\S\+/
                 \ contained containedin=uniteSource__gist
-                \ contains=uniteCandidateInputKeyword
     highlight default link uniteSource__gist_user Constant
     highlight default link uniteSource__gist_fname Keyword
 endfunction
