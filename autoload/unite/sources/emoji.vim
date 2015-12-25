@@ -1,61 +1,59 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:dict = expand('<sfile>:p:h').'/../libs/emoji.dict'
-let s:unite_source = {
+let s:dict = simplify(expand('<sfile>:p:h').'/../libs/emoji.dict')
+let s:source = {
             \ 'name': 'emoji',
             \ 'description' : 'Search for emoji by description.',
-            \ 'required_pattern_length': 3,
-            \ 'is_volatile': 1,
+            \  "default_action" : "insert",
             \ 'hooks' : {},
             \ 'action_table': {},
             \ 'syntax' : 'uniteSource__emoji'
             \ }
 
-let s:unite_source.action_table.insert = {
+let s:source.action_table.insert = {
             \ 'description' : 'insert emoji',
             \ 'is_quit' : 1
             \ }
 
-function! s:unite_source.action_table.insert.func(candidate)
-    let word = matchstr(a:candidate.word, '^.\{-}\ze\s')
-    call unite#kinds#common#insert_word(word)
+function! s:source.action_table.insert.func(candidate)
+  let word = matchstr(a:candidate.word, '^.\{-}\ze\s')
+  let col = getcurpos()[2]
+  let line = getline('.')
+  if col < 0 | let col = len(line)| endif
+  let pre = matchstr(line, '^.*\%' . col . 'c.')
+  let after = line[col :]
+  call setline(line('.'), pre . word . after)
 endfunction
 
-function! s:unite_source.hooks.on_syntax(args, context)
-    syntax match uniteSource__emoji_code /&.*;/
-                \ contained containedin=uniteSource__emoji
+function! s:source.hooks.on_init(args, context) abort
+  let a:context.source__data = readfile(s:dict)
+endfunction
+
+function! s:source.hooks.on_close(args, context)
+  let a:context.source__data = ''
+endfunction
+
+function! s:source.hooks.on_syntax(args, context)
     syntax match uniteSource__emoji_desc /\s\+\zs[A-Z0-9 -]\+/
                 \ contained containedin=uniteSource__emoji
                 \ contains=uniteCandidateInputKeyword
-    highlight default link uniteSource__emoji_code Constant
-    highlight default link uniteSource__emoji_desc String
+    highlight default link uniteSource__emoji_desc Normal
 endfunction
 
-function! s:unite_source.gather_candidates(args, context)
+function! s:source.gather_candidates(args, context)
     return map(
-                \ split(unite#util#system(
-                \   printf(s:command, a:context.input)
-                \ ), '\n'),
+                \ a:context.source__data,
                 \ '{"word": v:val,
                 \ "kind": "word",
+                \ "abbr": v:val,
                 \ "source": "emoji",
                 \ }')
 endfunction
 
 function! unite#sources#emoji#define()
-    if executable('ag')
-        let s:command = 'ag --nocolor -i "%s" '.s:dict
-    elseif executable('ack')
-        let s:command = 'ack --nocolor -i "%s" '.s:dict
-    elseif executable('grep')
-        let s:command = 'grep -i "%s" '.s:dict
-    else
-        return []
-    endif
-    return s:unite_source
+  return s:source
 endfunction
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
